@@ -24,15 +24,15 @@ export class WebsiteStack extends cdk.Stack {
     //   encryption: dynamodb.TableEncryption.DEFAULT
     // });
 
-    // const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
-    //   runtime: lambda.Runtime.PYTHON_3_8,
-    //   code: lambda.Code.fromAsset(path.resolve(__dirname, '/../../src/projects.py')),
-    //   handler: 'index.main'
-    // });
+    const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
+      runtime: lambda.Runtime.PYTHON_3_8,
+      code: lambda.Code.fromAsset(path.resolve(__dirname, '/../src')),
+      handler: 'projects.handler'
+    });
 
-    // const projectsLambdaIntegration = new LambdaProxyIntegration({
-    //   handler: projectsLambda
-    // });
+    const projectsLambdaIntegration = new LambdaProxyIntegration({
+      handler: projectsLambda
+    });
 
     const httpApi = new HttpApi(this, 'HttpApi', {
       corsPreflight: {
