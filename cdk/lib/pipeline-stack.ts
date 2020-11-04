@@ -2,6 +2,9 @@ import { Construct, Stack, StackProps, SecretValue } from '@aws-cdk/core';
 import { CdkPipeline, SimpleSynthAction } from '@aws-cdk/pipelines';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
+import { WebsiteStage } from './website-stage';
+
+//https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
 
 export class WebsitePipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -19,13 +22,23 @@ export class WebsitePipelineStack extends Stack {
                 output: sourceArtifact,
                 oauthToken: SecretValue.secretsManager('github-token'),
                 owner: 'evanparizot',
-                repo: 'https://github.com/evanparizot/website-backend'
+                repo: 'website-backend'
             }),
 
             synthAction: SimpleSynthAction.standardNpmSynth({
                 sourceArtifact,
                 cloudAssemblyArtifact
             })
-        })
+        });
+
+        // Define application stages here
+        pipeline.addApplicationStage(new WebsiteStage(this, 'Staging', {
+            env: { 
+                account: '591024261921', 
+                region: 'us-east-2'
+            }
+        }));
+
+
     }
 }
