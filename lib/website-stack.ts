@@ -38,7 +38,7 @@ export class WebsiteStack extends cdk.Stack {
       corsPreflight: {
         allowHeaders: ['Authorization'],
         allowMethods: [HttpMethod.GET],
-        allowOrigins: ['']
+        allowOrigins: ['*']
       }
     });
 
