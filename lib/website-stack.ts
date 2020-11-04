@@ -15,24 +15,24 @@ export class WebsiteStack extends cdk.Stack {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    const projectsTable = new dynamodb.Table(this, 'projects', {
-      partitionKey: {
-        name: '',
-        type: dynamodb.AttributeType.STRING
-      },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      encryption: dynamodb.TableEncryption.DEFAULT
-    });
+    // const projectsTable = new dynamodb.Table(this, 'projects', {
+    //   partitionKey: {
+    //     name: '',
+    //     type: dynamodb.AttributeType.STRING
+    //   },
+    //   billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    //   encryption: dynamodb.TableEncryption.DEFAULT
+    // });
 
-    const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
-      runtime: lambda.Runtime.PYTHON_3_8,
-      code: lambda.Code.fromAsset(path.resolve(__dirname, '/../../src/projects.py')),
-      handler: 'index.main'
-    });
+    // const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
+    //   runtime: lambda.Runtime.PYTHON_3_8,
+    //   code: lambda.Code.fromAsset(path.resolve(__dirname, '/../../src/projects.py')),
+    //   handler: 'index.main'
+    // });
 
-    const projectsLambdaIntegration = new LambdaProxyIntegration({
-      handler: projectsLambda
-    });
+    // const projectsLambdaIntegration = new LambdaProxyIntegration({
+    //   handler: projectsLambda
+    // });
 
     const httpApi = new HttpApi(this, 'HttpApi', {
       corsPreflight: {
@@ -42,11 +42,11 @@ export class WebsiteStack extends cdk.Stack {
       }
     });
 
-    httpApi.addRoutes({
-      path: '/projects',
-      methods: [ HttpMethod.GET ],
-      integration: projectsLambdaIntegration
-    });
+    // httpApi.addRoutes({
+    //   path: '/projects',
+    //   methods: [ HttpMethod.GET ],
+    //   integration: projectsLambdaIntegration
+    // });
 
   }
 }
