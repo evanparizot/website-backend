@@ -3,16 +3,23 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as apigwv2 from '@aws-cdk/aws-apigatewayv2';
 import * as lambda from '@aws-cdk/aws-lambda';
-import { HttpApi, HttpMethod, LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2';
-import { CfnOutput, Duration } from '@aws-cdk/core';
+import * as acm from '@aws-cdk/aws-certificatemanager';
+import { DomainName, HttpApi, HttpMethod, LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2';
+import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
 import * as path from 'path';
+import { WebsiteStageProps } from './website-stage';
+
+export interface WebsiteStackProps extends WebsiteStageProps {}
 
 export class WebsiteStack extends cdk.Stack {
 
   public readonly urlOutput: CfnOutput;
 
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
+
+    // **************************************
+    // Dynamo
 
     // The code that defines your stack goes here
     // const projectsTable = new dynamodb.Table(this, 'projects', {
@@ -24,17 +31,35 @@ export class WebsiteStack extends cdk.Stack {
     //   encryption: dynamodb.TableEncryption.DEFAULT
     // });
 
+    //
+    // **************************************
+    // Lambda(s)
+
     const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       code: lambda.Code.fromAsset(path.resolve(__dirname, 'lambda')),
       handler: 'projects.handler'
     });
 
-    // const projectsLambdaIntegration = new LambdaProxyIntegration({
-    //   handler: projectsLambda
-    // });
+    const projectsLambdaIntegration = new LambdaProxyIntegration({
+      handler: projectsLambda
+    });
 
-    const httpApi = new HttpApi(this, 'HttpApi', {
+    //
+    // **************************************
+    // APIGateway
+
+    const certificateArn = 	"arn:aws:acm:us-east-1:591024261921:certificate/2c6c560f-ce6d-449e-a618-0db51c9d6caa";
+
+    const domain = new DomainName(this, 'HttpApiDomain', {
+      domainName: props.apiUrl,
+      certificate: acm.Certificate.fromCertificateArn(this, 'ApiCertificate', certificateArn)
+    });
+
+    const httpApi = new HttpApi(this, `${id}HttpApi`, {
+      defaultDomainMapping: {
+        domainName: domain
+      },
       corsPreflight: {
         allowHeaders: ['Authorization'],
         allowMethods: [HttpMethod.GET],
@@ -42,11 +67,13 @@ export class WebsiteStack extends cdk.Stack {
       }
     });
 
-    // httpApi.addRoutes({
-    //   path: '/projects',
-    //   methods: [ HttpMethod.GET ],
-    //   integration: projectsLambdaIntegration
-    // });
-
+    httpApi.addRoutes({
+      path: '/projects',
+      methods: [ HttpMethod.GET ],
+      integration: projectsLambdaIntegration
+    });
+    
+    //
+    // **************************************
   }
 }

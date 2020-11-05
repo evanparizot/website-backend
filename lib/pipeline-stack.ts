@@ -38,7 +38,15 @@ export class WebsitePipelineStack extends Stack {
             env: { 
                 account: '591024261921', 
                 region: 'us-east-2'
-            }
+            },
+            apiUrl: "api.staging.evanparizot.com"
         }));
+
+        // pipeline.addApplicationStage(new WebsiteStage(this, 'Production', {
+        //     env: {
+        //         account: '',
+        //         region: 'us-east-2'
+        //     }
+        // }));
     }
 }
