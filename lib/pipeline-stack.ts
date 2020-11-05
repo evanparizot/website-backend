@@ -40,7 +40,5 @@ export class WebsitePipelineStack extends Stack {
                 region: 'us-east-2'
             }
         }));
-
-
     }
 }
