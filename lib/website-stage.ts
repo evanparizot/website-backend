@@ -12,7 +12,7 @@ export class WebsiteStage extends Stage {
     constructor(scope: Construct, id: string, props: WebsiteStageProps) {
         super(scope, id, props);
 
-        const service = new WebsiteStack(this, id, props);
+        const service = new WebsiteStack(this, 'Website', props);
 
         this.urlOutput = service.urlOutput;
     }

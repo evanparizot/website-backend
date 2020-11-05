@@ -8,6 +8,8 @@ import { DomainName, HttpApi, HttpMethod, LambdaProxyIntegration } from '@aws-cd
 import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
+import { HostedZone } from '@aws-cdk/aws-route53';
+import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
 
@@ -49,11 +51,16 @@ export class WebsiteStack extends cdk.Stack {
     // **************************************
     // APIGateway
 
-    const certificateArn = 	"arn:aws:acm:us-east-1:591024261921:certificate/2c6c560f-ce6d-449e-a618-0db51c9d6caa";
+    const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
+
+    const certificate = new Certificate(this, 'Certificate', {
+      domainName: props.apiUrl,
+      validation: CertificateValidation.fromDns(zone)
+    });
 
     const domain = new DomainName(this, 'HttpApiDomain', {
       domainName: props.apiUrl,
-      certificate: acm.Certificate.fromCertificateArn(this, 'ApiCertificate', certificateArn)
+      certificate: certificate
     });
 
     const httpApi = new HttpApi(this, `${id}HttpApi`, {
