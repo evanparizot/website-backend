@@ -4,11 +4,13 @@ import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as apigwv2 from '@aws-cdk/aws-apigatewayv2';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as route53 from '@aws-cdk/aws-route53';
+import * as alias from '@aws-cdk/aws-route53-targets';
 import { DomainName, HttpApi, HttpMethod, LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2';
 import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
-import { HostedZone } from '@aws-cdk/aws-route53';
+import { AddressRecordTarget, AliasRecordTargetConfig, ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
@@ -61,6 +63,16 @@ export class WebsiteStack extends cdk.Stack {
     const domain = new DomainName(this, 'HttpApiDomain', {
       domainName: props.apiUrl,
       certificate: certificate
+    });
+
+    const r53Alias = new ARecord(this, 'ARecord', {
+      zone: zone,
+      target: RecordTarget.fromAlias({
+        bind: (): route53.AliasRecordTargetConfig=> ({
+          dnsName: domain.regionalDomainName,
+          hostedZoneId: domain.regionalHostedZoneId
+        })
+      })
     });
 
     const httpApi = new HttpApi(this, `${id}HttpApi`, {
