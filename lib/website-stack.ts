@@ -42,7 +42,7 @@ export class WebsiteStack extends cdk.Stack {
 
     const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
-      code: lambda.Code.fromAsset(path.resolve(__dirname, 'lambda')),
+      code: lambda.Code.fromAsset(path.resolve(__dirname, '../src')),
       handler: 'projects.handler'
     });
 
@@ -60,7 +60,6 @@ export class WebsiteStack extends cdk.Stack {
       hostedZoneId: 'Z2YUIRANSY13TZ',
       zoneName: 'evanparizot.com'
     });
-    // const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
 
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
