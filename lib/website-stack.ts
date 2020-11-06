@@ -27,14 +27,14 @@ export class WebsiteStack extends cdk.Stack {
     // Dynamo
 
     // The code that defines your stack goes here
-    // const projectsTable = new dynamodb.Table(this, 'projects', {
-    //   partitionKey: {
-    //     name: '',
-    //     type: dynamodb.AttributeType.STRING
-    //   },
-    //   billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    //   encryption: dynamodb.TableEncryption.DEFAULT
-    // });
+    const projectsTable = new dynamodb.Table(this, 'projects-table', {
+      partitionKey: {
+        name: 'id',
+        type: dynamodb.AttributeType.STRING
+      },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      encryption: dynamodb.TableEncryption.DEFAULT
+    });
 
     //
     // **************************************
@@ -66,29 +66,17 @@ export class WebsiteStack extends cdk.Stack {
       validation: CertificateValidation.fromDns(zone)
     });
 
-    // const domainName = new apigw.DomainName(this, 'domainName', {
-    //   domainName: props.apiUrl,
-    //   certificate: certificate,
-    //   endpointType: EndpointType.REGIONAL,
-    //   securityPolicy: SecurityPolicy.TLS_1_2
-    // });
-
-    // const domain = new DomainName(this, 'HttpApiDomain', {
-    //   domainName: props.apiUrl,
-    //   certificate: certificate
-    // });
-
     const restApi = new RestApi(this, 'RestApi', {
       domainName: {
         domainName: props.apiUrl,
         certificate: certificate,
         endpointType: EndpointType.REGIONAL,
         securityPolicy: SecurityPolicy.TLS_1_2
-      }
+      },
+      
     });
 
     restApi.root.addResource('projects').addMethod('GET', projectsLambdaIntegration);
-
 
     new ARecord(this, 'ARecord', {
       recordName: props.apiUrl,
@@ -96,23 +84,6 @@ export class WebsiteStack extends cdk.Stack {
       target: RecordTarget.fromAlias(new alias.ApiGateway(restApi))
     });
 
-    // const httpApi = new HttpApi(this, `${id}HttpApi`, {
-    //   defaultDomainMapping: {
-    //     domainName: domain
-    //   },
-    //   corsPreflight: {
-    //     allowHeaders: ['Authorization'],
-    //     allowMethods: [HttpMethod.GET],
-    //     allowOrigins: ['*']
-    //   }
-    // });
-
-    // httpApi.addRoutes({
-    //   path: '/projects',
-    //   methods: [ HttpMethod.GET ],
-    //   integration: projectsLambdaIntegration
-    // });
-    
     //
     // **************************************
   }
