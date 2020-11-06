@@ -8,5 +8,5 @@ def handler(event, context):
         'headers': {
             'Content-Type': 'text/plain'
         },
-        'body': 'Hello, there')
+        'body': 'Hello, there'
     }
