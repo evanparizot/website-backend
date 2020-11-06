@@ -5,6 +5,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as alias from '@aws-cdk/aws-route53-targets';
+import * as apigw from '@aws-cdk/aws-apigateway';
 import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
@@ -55,36 +56,46 @@ export class WebsiteStack extends cdk.Stack {
     // **************************************
     // APIGateway
 
-    const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
-   
+    const zone = HostedZone.fromHostedZoneAttributes(this, 'domainzone', {
+      hostedZoneId: 'Z2YUIRANSY13TZ',
+      zoneName: 'evanparizot.com'
+    });
+    // const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
 
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
       validation: CertificateValidation.fromDns(zone)
     });
 
-    const domainName = new DomainName(this, 'domainName', {
-      domainName: props.apiUrl,
-      certificate: certificate,
-      endpointType: EndpointType.REGIONAL,
-      securityPolicy: SecurityPolicy.TLS_1_2
-    });
-
-    new ARecord(this, 'ARecord', {
-      zone: zone,
-      target: RecordTarget.fromAlias(new alias.ApiGatewayDomain(domainName))
-    });
+    // const domainName = new apigw.DomainName(this, 'domainName', {
+    //   domainName: props.apiUrl,
+    //   certificate: certificate,
+    //   endpointType: EndpointType.REGIONAL,
+    //   securityPolicy: SecurityPolicy.TLS_1_2
+    // });
 
     // const domain = new DomainName(this, 'HttpApiDomain', {
     //   domainName: props.apiUrl,
     //   certificate: certificate
     // });
 
-    const restApi = new RestApi(this, 'RestApi', {});
+    const restApi = new RestApi(this, 'RestApi', {
+      domainName: {
+        domainName: props.apiUrl,
+        certificate: certificate,
+        endpointType: EndpointType.REGIONAL,
+        securityPolicy: SecurityPolicy.TLS_1_2
+      }
+    });
 
     restApi.root.addResource('projects').addMethod('GET', projectsLambdaIntegration);
 
-    domainName.addBasePathMapping(restApi);
+
+    new ARecord(this, 'ARecord', {
+      recordName: props.apiUrl,
+      zone: zone,
+      target: RecordTarget.fromAlias(new alias.ApiGateway(restApi))
+    });
 
     // const httpApi = new HttpApi(this, `${id}HttpApi`, {
     //   defaultDomainMapping: {
