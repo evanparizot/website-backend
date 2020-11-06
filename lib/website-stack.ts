@@ -1,7 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import * as apigwv2 from '@aws-cdk/aws-apigatewayv2';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as route53 from '@aws-cdk/aws-route53';
@@ -10,8 +9,9 @@ import { DomainName, HttpApi, HttpMethod, LambdaProxyIntegration } from '@aws-cd
 import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
-import { AddressRecordTarget, AliasRecordTargetConfig, ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
+import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
 
@@ -45,52 +45,62 @@ export class WebsiteStack extends cdk.Stack {
       handler: 'projects.handler'
     });
 
-    const projectsLambdaIntegration = new LambdaProxyIntegration({
-      handler: projectsLambda
-    });
+    const projectsLambdaIntegration = new LambdaIntegration(projectsLambda);
+
+    // const projectsLambdaIntegration = new LambdaProxyIntegration({
+    //   handler: projectsLambda
+    // });
 
     //
     // **************************************
     // APIGateway
 
-    const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
+    // const zone = HostedZone.fromHostedZoneId(this, 'domainzone', 'Z2YUIRANSY13TZ');
+    const zone = HostedZone.fromHostedZoneAttributes(this, 'domainzone', {
+      hostedZoneId: 'Z2YUIRANSY13TZ',
+      zoneName: 'evanparizot.com'
+    });
 
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
       validation: CertificateValidation.fromDns(zone)
     });
 
-    const domain = new DomainName(this, 'HttpApiDomain', {
-      domainName: props.apiUrl,
-      certificate: certificate
-    });
+    // const domain = new DomainName(this, 'HttpApiDomain', {
+    //   domainName: props.apiUrl,
+    //   certificate: certificate
+    // });
 
-    const r53Alias = new ARecord(this, 'ARecord', {
-      zone: zone,
-      target: RecordTarget.fromAlias({
-        bind: (): route53.AliasRecordTargetConfig=> ({
-          dnsName: domain.regionalDomainName,
-          hostedZoneId: domain.regionalHostedZoneId
-        })
-      })
-    });
-
-    const httpApi = new HttpApi(this, `${id}HttpApi`, {
-      defaultDomainMapping: {
-        domainName: domain
-      },
-      corsPreflight: {
-        allowHeaders: ['Authorization'],
-        allowMethods: [HttpMethod.GET],
-        allowOrigins: ['*']
+    const restApi = new RestApi(this, 'RestApi', {
+      domainName: {
+        domainName: props.apiUrl,
+        certificate: certificate
       }
     });
 
-    httpApi.addRoutes({
-      path: '/projects',
-      methods: [ HttpMethod.GET ],
-      integration: projectsLambdaIntegration
+    restApi.root.addResource('projects').addMethod('GET', projectsLambdaIntegration);
+
+    const r53Alias = new ARecord(this, 'ARecord', {
+      zone: zone,
+      target: RecordTarget.fromAlias(new alias.ApiGateway(restApi))
     });
+
+    // const httpApi = new HttpApi(this, `${id}HttpApi`, {
+    //   defaultDomainMapping: {
+    //     domainName: domain
+    //   },
+    //   corsPreflight: {
+    //     allowHeaders: ['Authorization'],
+    //     allowMethods: [HttpMethod.GET],
+    //     allowOrigins: ['*']
+    //   }
+    // });
+
+    // httpApi.addRoutes({
+    //   path: '/projects',
+    //   methods: [ HttpMethod.GET ],
+    //   integration: projectsLambdaIntegration
+    // });
     
     //
     // **************************************
