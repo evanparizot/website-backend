@@ -22,20 +22,6 @@ export class WebsiteStack extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
-
-    // **************************************
-    // Dynamo
-
-    // The code that defines your stack goes here
-    const projectsTable = new dynamodb.Table(this, 'projects-table', {
-      partitionKey: {
-        name: 'id',
-        type: dynamodb.AttributeType.STRING
-      },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      encryption: dynamodb.TableEncryption.DEFAULT
-    });
-
     //
     // **************************************
     // Lambda(s)
@@ -51,6 +37,22 @@ export class WebsiteStack extends cdk.Stack {
     // const projectsLambdaIntegration = new LambdaProxyIntegration({
     //   handler: projectsLambda
     // });
+
+    //
+    // **************************************
+    // Dynamo
+
+    // The code that defines your stack goes here
+    const projectsTable = new dynamodb.Table(this, 'projects-table', {
+      partitionKey: {
+        name: 'id',
+        type: dynamodb.AttributeType.STRING
+      },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      encryption: dynamodb.TableEncryption.DEFAULT
+    });
+
+    projectsTable.grantReadWriteData(projectsLambda);
 
     //
     // **************************************
