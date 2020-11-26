@@ -30,7 +30,7 @@ export class WebsitePipelineStack extends Stack {
                 sourceArtifact,
                 cloudAssemblyArtifact,
                 installCommands: ['npm install -g aws-cdk'],
-                buildCommands: ['mvn package -f ./src/pom.xml'],
+                buildCommands: ['mvn -f ./src/pom.xml package '],
                 synthCommand: 'cdk synth'
             })
             // synthAction: SimpleSynthAction.standardNpmSynth({
