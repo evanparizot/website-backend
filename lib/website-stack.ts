@@ -1,18 +1,13 @@
 import * as cdk from '@aws-cdk/core';
-import * as s3 from '@aws-cdk/aws-s3';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as lambda from '@aws-cdk/aws-lambda';
-import * as acm from '@aws-cdk/aws-certificatemanager';
-import * as route53 from '@aws-cdk/aws-route53';
 import * as alias from '@aws-cdk/aws-route53-targets';
-import * as apigw from '@aws-cdk/aws-apigateway';
-import { CfnOutput, Duration, StackProps } from '@aws-cdk/core';
+import { CfnOutput } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
-import { DomainName, EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from '@aws-cdk/aws-apigateway';
-import { domain } from 'process';
+import { EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from '@aws-cdk/aws-apigateway';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
 
@@ -27,9 +22,9 @@ export class WebsiteStack extends cdk.Stack {
     // Lambda(s)
 
     const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.JAVA_11,
+      handler: 'com.evanparizot.projects.ProjectsHandler',
       code: lambda.Code.fromAsset(path.resolve(__dirname, '../src')),
-      handler: 'projects.handler'
     });
 
     const projectsLambdaIntegration = new LambdaIntegration(projectsLambda);
@@ -46,6 +41,10 @@ export class WebsiteStack extends cdk.Stack {
     const projectsTable = new dynamodb.Table(this, 'projects-table', {
       partitionKey: {
         name: 'id',
+        type: dynamodb.AttributeType.STRING
+      },
+      sortKey: {
+        name: 'version',
         type: dynamodb.AttributeType.STRING
       },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,

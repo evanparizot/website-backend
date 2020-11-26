@@ -28,8 +28,7 @@ export class WebsitePipelineStack extends Stack {
             synthAction: SimpleSynthAction.standardNpmSynth({
                 sourceArtifact,
                 cloudAssemblyArtifact,
-
-                // buildCommand: 'npm run build'
+                buildCommand: 'npm run build',
             })
         });
 
