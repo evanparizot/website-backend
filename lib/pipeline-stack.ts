@@ -29,8 +29,11 @@ export class WebsitePipelineStack extends Stack {
             synthAction: new SimpleSynthAction({
                 sourceArtifact,
                 cloudAssemblyArtifact,
-                installCommands: ['npm install -g aws-cdk'],
-                buildCommands: ['mvn -f ./src/pom.xml package '],
+                installCommands: ['npm install -g aws-cdk', 'npm run build'],
+                buildCommands: [
+                    'npm run build',
+                    'mvn -f ./src/pom.xml package'
+                ],
                 synthCommand: 'cdk synth'
             })
             // synthAction: SimpleSynthAction.standardNpmSynth({
