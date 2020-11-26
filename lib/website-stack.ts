@@ -24,7 +24,7 @@ export class WebsiteStack extends cdk.Stack {
     const projectsLambda = new lambda.Function(this, 'ProjectsLambda', {
       runtime: lambda.Runtime.JAVA_11,
       handler: 'com.evanparizot.projects.ProjectsHandler',
-      code: lambda.Code.fromAsset(path.resolve(__dirname, '../src/target')),
+      code: lambda.Code.fromAsset(path.resolve(__dirname, '../src/target/website-backend-1.0-SNAPSHOT.jar')),
     });
 
     const projectsLambdaIntegration = new LambdaIntegration(projectsLambda);
