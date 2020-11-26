@@ -11,6 +11,9 @@ public class ProjectsHandler implements RequestHandler<APIGatewayProxyRequestEve
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 
         LambdaLogger logger = context.getLogger();
+
+
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         logger.log("Hello there");
         logger.log(String.valueOf(event));
         return null;
