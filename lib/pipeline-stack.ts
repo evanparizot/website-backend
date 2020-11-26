@@ -3,6 +3,7 @@ import { CdkPipeline, SimpleSynthAction } from '@aws-cdk/pipelines';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { WebsiteStage } from './website-stage';
+import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 
 //https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
 //https://docs.aws.amazon.com/cdk/api/latest/docs/pipelines-readme.html
@@ -29,9 +30,8 @@ export class WebsitePipelineStack extends Stack {
             synthAction: new SimpleSynthAction({
                 sourceArtifact,
                 cloudAssemblyArtifact,
-                installCommands: ['npm install -g aws-cdk', 'npm run build'],
+                installCommands: ['npm install -g aws-cdk'],
                 buildCommands: [
-                    'npm run build',
                     'mvn -f ./src/pom.xml package'
                 ],
                 synthCommand: 'cdk synth'
