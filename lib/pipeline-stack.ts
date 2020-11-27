@@ -39,29 +39,23 @@ export class WebsitePipelineStack extends Stack {
                 ],
                 synthCommand: 'npx cdk synth'
             })
-            // synthAction: SimpleSynthAction.standardNpmSynth({
-            //     sourceArtifact,
-            //     cloudAssemblyArtifact,
-                
-            // })
         });
 
         // Define application stages here
-        const stagingStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Staging', {
+        const betaStage = pipeline.addApplicationStage(new WebsiteStage(this, 'BetaStage', {
             env: { 
-                account: '591024261921', 
+                account: '602915839163', 
                 region: 'us-east-2'
             },
-            apiUrl: "api.staging.evanparizot.com"
+            apiUrl: 'api.beta.evanparizot.com'
         }));
 
-        // stagingStage.addActions(new Shell)
-
-        // const productionStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Production', {
-        //     env: {
-        //         account: '',
-        //         region: 'us-east-2'
-        //     }
-        // }));
+        const prodStage = pipeline.addApplicationStage(new WebsiteStage(this, 'ProdStage', {
+            env: {
+                account: '893753507904',
+                region: 'us-east-2'
+            },
+            apiUrl: 'api.evanparizot.com'
+        }));
     }
 }

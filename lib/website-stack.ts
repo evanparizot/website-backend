@@ -5,7 +5,7 @@ import * as alias from '@aws-cdk/aws-route53-targets';
 import { CfnOutput } from '@aws-cdk/core';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
-import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { ARecord, HostedZone, PublicHostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
 import { EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from '@aws-cdk/aws-apigateway';
 
@@ -57,9 +57,13 @@ export class WebsiteStack extends cdk.Stack {
     // **************************************
     // APIGateway
 
-    const zone = HostedZone.fromHostedZoneAttributes(this, 'domainzone', {
-      hostedZoneId: 'Z2YUIRANSY13TZ',
-      zoneName: 'evanparizot.com'
+    // const zone = HostedZone.fromHostedZoneAttributes(this, 'domainzone', {
+    //   hostedZoneId: 'Z2YUIRANSY13TZ',
+    //   zoneName: 'evanparizot.com'
+    // });
+
+    const zone = new PublicHostedZone(this, 'HostedZone', {
+      zoneName: props.apiUrl
     });
 
     const certificate = new Certificate(this, 'Certificate', {
@@ -74,7 +78,6 @@ export class WebsiteStack extends cdk.Stack {
         endpointType: EndpointType.REGIONAL,
         securityPolicy: SecurityPolicy.TLS_1_2
       },
-      
     });
 
     restApi.root.addResource('projects').addMethod('GET', projectsLambdaIntegration);
