@@ -3,6 +3,7 @@ import { CdkPipeline, SimpleSynthAction } from '@aws-cdk/pipelines';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { WebsiteStage } from './website-stage';
+import * as codebuild from '@aws-cdk/aws-codebuild';
 import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 
 //https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
@@ -11,6 +12,16 @@ import { CodeBuildAction } from '@aws-cdk/aws-codepipeline-actions';
 export class WebsitePipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
+
+        // const githubSource = codebuild.Source.gitHub({
+        //     owner: 'evanparizot',
+        //     repo: 'website-backend',
+        //     webhook: true,
+        //     webhookFilters: [
+        //         codebuild.FilterGroup
+        //             .inEventOf(codebuild.EventAction.PULL_REQUEST_CREATED, codebuild.EventAction.PULL_REQUEST_UPDATED)
+        //     ]
+        // })
 
         const sourceArtifact = new codepipeline.Artifact();
         const cloudAssemblyArtifact = new codepipeline.Artifact();

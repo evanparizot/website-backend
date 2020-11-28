@@ -33,11 +33,11 @@ public class ProjectsHandler implements RequestHandler<APIGatewayProxyRequestEve
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 
-//        LambdaLogger logger = context.getLogger();
+        LambdaLogger logger = context.getLogger();
 //        mapper.load(Project.class, "", "");
 //
 //        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-//        logger.log("Hello there");
+        logger.log("Hello there");
 //        logger.log(String.valueOf(event));
         return null;
     }
