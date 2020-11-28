@@ -39,7 +39,12 @@ public class ProjectsHandler implements RequestHandler<APIGatewayProxyRequestEve
 //        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         logger.log("Hello there");
 //        logger.log(String.valueOf(event));
-        return null;
+
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+        response.setStatusCode(200);
+        response.setBody("Success!");
+
+        return response;
     }
 
     private void something() {
