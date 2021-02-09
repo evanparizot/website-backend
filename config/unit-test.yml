@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  build:
+    commands:
+      - cd src
+      - mvn surefire-report:report
+
+reports:
+  SurefireReports:
+    files:
+      - '**/*'
+    base-directory: './src/target/surefire-reports'
+
+# reports:
+#   AppTestResults:
+#     file-format: 
+#     files:
+#       - '**/*'
+#     base-directory: './src/testresults'
