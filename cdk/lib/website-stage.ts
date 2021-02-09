@@ -1,4 +1,4 @@
-import { CfnOutput, Construct, Stage, StageProps } from '@aws-cdk/core';
+import { CfnOutput, Construct, Stage, StageProps } from 'monocdk';
 import { WebsiteStack } from './website-stack';
 
 export interface WebsiteStageProps extends StageProps {

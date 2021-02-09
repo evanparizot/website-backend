@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Builder
 @EqualsAndHashCode
-public class Project {
+class Project {
 
     private UUID id;
     private String version;
