@@ -51,16 +51,8 @@ export class WebsitePipelineStack extends Stack {
             buildSpec: BuildSpec.fromSourceFilename('config/unit-test.yml')
         });
 
-        const compileCode = new PipelineProject(this, 'CompileCode', {
-            projectName: 'Compile',
-            environment: {
-                buildImage: LinuxBuildImage.AMAZON_LINUX_2_3
-            },
-            buildSpec: BuildSpec.fromSourceFilename('config/compile.yml')
-        });
-
-        const compileStage = pipeline.addStage('Compile');
-        compileStage.addActions(
+        const validationStage = pipeline.addStage('Validation');
+        validationStage.addActions(
             new CodeBuildAction({
                 actionName: 'UnitTest',
                 input: sourceArtifact,
@@ -69,16 +61,6 @@ export class WebsitePipelineStack extends Stack {
                 ],
                 project: unitTests,
                 type: CodeBuildActionType.TEST,
-                runOrder: 1
-            }),
-            new CodeBuildAction({
-                actionName: 'CompileCode',
-                input: sourceArtifact,
-                outputs: [
-                    new Artifact()
-                ],
-                project: compileCode,
-                type: CodeBuildActionType.BUILD,
                 runOrder: 1
             })
         );
