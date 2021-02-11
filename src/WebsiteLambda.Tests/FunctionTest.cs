@@ -1,7 +1,7 @@
 
 using Xunit;
 
-namespace ProjectsLambda.Tests
+namespace WebsiteLambda.Tests
 {
     public class FunctionTest
     {
