@@ -1,8 +1,8 @@
 import {Construct, Stack, StackProps, SecretValue, RemovalPolicy} from 'monocdk';
 import { Artifact} from 'monocdk/aws-codepipeline';
 import { CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'monocdk/aws-codepipeline-actions';
-import { BuildSpec, LinuxBuildImage, PipelineProject } from 'monocdk/lib/aws-codebuild';
 import { CdkPipeline, SimpleSynthAction} from 'monocdk/pipelines';
+import { Project, FilterGroup, EventAction, BuildSpec, Source, PipelineProject, LinuxBuildImage } from 'monocdk/aws-codebuild';
 import { BETA, PROD } from '../env/accounts';
 import { WebsiteStage } from './website-stage';
 //https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
@@ -43,6 +43,24 @@ export class WebsitePipelineStack extends Stack {
                 synthCommand: 'npx cdk synth',
                 subdirectory: 'cdk'
             })
+        });
+
+        const pullRequestProject = new Project(this, 'PullRequestTests', {
+            buildSpec: BuildSpec.fromSourceFilename('config/unit-test.yml'),
+            source: Source.gitHub({
+                owner: 'evanparizot',
+                repo: 'website-backend',
+                webhook: true,
+                webhookFilters: [
+                    FilterGroup.inEventOf(EventAction.PULL_REQUEST_CREATED)
+                    .andBranchIsNot('master'),
+                    FilterGroup.inEventOf(EventAction.PULL_REQUEST_UPDATED)
+                    .andBranchIsNot('master')
+                ]
+            }),
+            environment: {
+                buildImage: LinuxBuildImage.AMAZON_LINUX_2_3
+            }
         });
 
         const unitTests = new PipelineProject(this, 'UnitTest', {
