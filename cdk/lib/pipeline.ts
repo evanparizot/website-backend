@@ -49,6 +49,7 @@ export class WebsitePipelineStack extends Stack {
         });
 
         const pullRequestProject = new Project(this, 'PullRequestTests', {
+            projectName: 'PullRequest-UnitTests',
             buildSpec: BuildSpec.fromSourceFilename('config/unit-test.yml'),
             source: Source.gitHub({
                 owner: 'evanparizot',
