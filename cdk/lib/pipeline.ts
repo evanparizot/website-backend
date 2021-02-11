@@ -32,11 +32,13 @@ export class WebsitePipelineStack extends Stack {
                 cloudAssemblyArtifact,
                 installCommands: [
                     'npm install',
-                    'npm install -g aws-cdk'
+                    'npm install -g aws-cdk',
+                    'dotnet tool install -g Amazon.Lambda.Tools'
                 ],
                 buildCommands: [
                     'npm run build',
-                    'mvn -f ../src/pom.xml package'
+                    'mvn -f ../src/pom.xml package',
+                    'dotnet-lambda package --project-location src/ProjectsLambda/ProjectsLambda'
                 ],
                 synthCommand: 'npx cdk synth',
                 subdirectory: 'cdk'
