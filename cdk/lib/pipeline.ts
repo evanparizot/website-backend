@@ -37,8 +37,7 @@ export class WebsitePipelineStack extends Stack {
                 ],
                 buildCommands: [
                     'npm run build',
-                    // 'mvn -f ../src/pom.xml package',
-                    'dotnet-lambda package --project-location ../src/ProjectsLambda/ProjectsLambda'
+                    'dotnet-lambda package --project-location ../src/ProjectsLambda'
                 ],
                 synthCommand: 'npx cdk synth',
                 subdirectory: 'cdk'

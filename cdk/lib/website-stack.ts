@@ -7,8 +7,6 @@ import { Certificate, CertificateValidation } from 'monocdk/aws-certificatemanag
 import { EndpointType, JsonSchemaType, JsonSchemaVersion, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
-import { HttpApi } from 'monocdk/aws-apigatewayv2'
-import { LambdaProxyIntegration } from 'monocdk/lib/aws-apigatewayv2-integrations';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
 
@@ -24,7 +22,7 @@ export class WebsiteStack extends Stack {
 
     const handlerPath: string = 'ProjectsLambda::ProjectsLambda.LambdaEntryPoint::FunctionHandlerAsync';
     const projectCode: Code = Code.fromAsset(
-      path.resolve(__dirname, '../../src/ProjectsLambda/ProjectsLambda/bin/Release/netcoreapp3.1/ProjectsLambda.zip'));
+      path.resolve(__dirname, '../../src/ProjectsLambda/bin/Release/netcoreapp3.1/ProjectsLambda.zip'));
 
     const projectsLambda = new Function(this, 'ProjectsLambda', {
       runtime: Runtime.DOTNET_CORE_3_1,

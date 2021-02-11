@@ -5,7 +5,7 @@ phases:
       dotnet: 3.1
   build:
     commands:
-      - cd src/ProjectsLambda
+      - cd src
       - dotnet --list-sdks
       - dotnet build -c Release
       - dotnet test -c Release --logger trx --results-directory ./testresults
@@ -15,26 +15,4 @@ reports:
     file-format: VisualStudioTrx
     files:
       - '**/*'
-    base-directory: './src/ProjectsLambda/testresults'
-
-# phases:
-#   install:
-#     runtime-versions:
-#       java: corretto11
-#   build:
-#     commands:
-#       - cd src
-#       - mvn surefire-report:report
-
-# reports:
-#   SurefireReports:
-#     files:
-#       - '**/*'
-#     base-directory: './src/target/surefire-reports'
-
-# reports:
-#   AppTestResults:
-#     file-format: 
-#     files:
-#       - '**/*'
-#     base-directory: './src/testresults'
+    base-directory: './src/testresults'
