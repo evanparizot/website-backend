@@ -79,16 +79,21 @@ export class WebsiteStack extends Stack {
         securityPolicy: SecurityPolicy.TLS_1_2
       },
     });
-    
-    const responseModel = restApi.addModel('SuccessResponse', {
-      contentType: 'application/json',
-      schema: {
-        schema: JsonSchemaVersion.DRAFT4,
-        type: JsonSchemaType.OBJECT
-      }
-    });
 
-    restApi.root.addResource('projects').addMethod('GET', new LambdaIntegration(projectsLambda));
+    restApi.root.addProxy({
+      defaultIntegration: new LambdaIntegration(projectsLambda),
+      anyMethod: true
+    });
+    
+    // const responseModel = restApi.addModel('SuccessResponse', {
+    //   contentType: 'application/json',
+    //   schema: {
+    //     schema: JsonSchemaVersion.DRAFT4,
+    //     type: JsonSchemaType.OBJECT
+    //   }
+    // });
+
+    // restApi.root.addResource('projects').addMethod('GET', new LambdaIntegration(projectsLambda));
     // restApi.root.addResource('projects/{id}').addMethod('GET', new LambdaIntegration(projectLambda));
 
     new ARecord(this, 'ARecord', {
