@@ -7,6 +7,8 @@ import { Certificate, CertificateValidation } from 'monocdk/aws-certificatemanag
 import { EndpointType, JsonSchemaType, JsonSchemaVersion, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
+import { HttpApi } from 'monocdk/aws-apigatewayv2'
+import { LambdaProxyIntegration } from 'monocdk/lib/aws-apigatewayv2-integrations';
 
 export interface WebsiteStackProps extends WebsiteStageProps {}
 
@@ -64,6 +66,10 @@ export class WebsiteStack extends Stack {
       domainName: props.apiUrl,
       validation: CertificateValidation.fromDns(zone)
     });
+
+    // const httpApi = new HttpApi(this, 'HttpApi', {
+    //   defaultIntegration: new LambdaProxyIntegration({handler: projectsLambda})
+    // });
     
     const restApi = new RestApi(this, 'RestApi', {
       domainName: {
