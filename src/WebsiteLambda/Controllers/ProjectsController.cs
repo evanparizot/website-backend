@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProjectsLambda.Controllers
+namespace WebsiteLambda.Controllers
 {
     [Route("[controller]")]
     public class ProjectsController : ControllerBase

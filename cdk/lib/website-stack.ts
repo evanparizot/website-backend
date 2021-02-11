@@ -16,25 +16,23 @@ export class WebsiteStack extends Stack {
 
   constructor(scope: Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
-    //
     // **************************************
     // Lambda(s)
 
-    const handlerPath: string = 'ProjectsLambda::ProjectsLambda.LambdaEntryPoint::FunctionHandlerAsync';
+    const handlerPath: string = 'WebsiteLambda::WebsiteLambda.LambdaEntryPoint::FunctionHandlerAsync';
     const projectCode: Code = Code.fromAsset(
-      path.resolve(__dirname, '../../src/ProjectsLambda/bin/Release/netcoreapp3.1/ProjectsLambda.zip'));
+      path.resolve(__dirname, '../../src/WebsiteLambda/bin/Release/netcoreapp3.1/WebsiteLambda.zip'));
 
-    const projectsLambda = new Function(this, 'ProjectsLambda', {
+    const projectsLambda = new Function(this, 'WebsiteLambda', {
+      functionName: 'WebsiteLambda',
       runtime: Runtime.DOTNET_CORE_3_1,
       handler: handlerPath,
       code: projectCode,
     });
 
-    //
     // **************************************
     // Dynamo
     
-    // The code that defines your stack goes here
     const projectsTable = new Table(this, 'projects', {
       tableName: 'projects',
       partitionKey: {
@@ -52,7 +50,6 @@ export class WebsiteStack extends Stack {
     
     projectsTable.grantReadWriteData(projectsLambda);
     
-    //
     // **************************************
     // APIGateway
     
@@ -65,11 +62,8 @@ export class WebsiteStack extends Stack {
       validation: CertificateValidation.fromDns(zone)
     });
 
-    // const httpApi = new HttpApi(this, 'HttpApi', {
-    //   defaultIntegration: new LambdaProxyIntegration({handler: projectsLambda})
-    // });
-    
-    const restApi = new RestApi(this, 'RestApi', {
+    const restApi = new RestApi(this, 'WebsiteApi', {
+      restApiName: 'WebsiteApi',
       domainName: {
         domainName: props.apiUrl,
         certificate: certificate,
@@ -83,24 +77,12 @@ export class WebsiteStack extends Stack {
       anyMethod: true
     });
     
-    // const responseModel = restApi.addModel('SuccessResponse', {
-    //   contentType: 'application/json',
-    //   schema: {
-    //     schema: JsonSchemaVersion.DRAFT4,
-    //     type: JsonSchemaType.OBJECT
-    //   }
-    // });
-
-    // restApi.root.addResource('projects').addMethod('GET', new LambdaIntegration(projectsLambda));
-    // restApi.root.addResource('projects/{id}').addMethod('GET', new LambdaIntegration(projectLambda));
-
     new ARecord(this, 'ARecord', {
       recordName: props.apiUrl,
       zone: zone,
       target: RecordTarget.fromAlias(new ApiGateway(restApi))
     });
     
-    //
     // **************************************
   }
 }
