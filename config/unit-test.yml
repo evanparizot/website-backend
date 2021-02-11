@@ -15,7 +15,7 @@ reports:
     file-format: VisualStudioTrx
     files:
       - '**/*'
-    base-directory: './src/testresults'
+    base-directory: './src/ProjectsLambda/testresults'
 
 # phases:
 #   install:
