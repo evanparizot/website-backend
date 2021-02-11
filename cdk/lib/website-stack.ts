@@ -20,22 +20,16 @@ export class WebsiteStack extends Stack {
     // **************************************
     // Lambda(s)
 
-    const runTime: Runtime = Runtime.JAVA_11;
-    const handlerPath: string = 'com.evanparizot.projects.handler.ProjectsHandler';
-    const projectCode: Code = Code.fromAsset(path.resolve(__dirname, '../../src/target/website-backend-1.0-SNAPSHOT.jar'));
+    const handlerPath: string = 'ProjectsLambda::ProjectsLambda.LambdaEntryPoint::FunctionHandlerAsync';
+    const projectCode: Code = Code.fromAsset(
+      path.resolve(__dirname, '../../src/ProjectsLambda/ProjectsLambda/bin/Release/netcoreapp3.1/ProjectsLambda.zip'));
 
     const projectsLambda = new Function(this, 'ProjectsLambda', {
-      runtime: runTime,
+      runtime: Runtime.DOTNET_CORE_3_1,
       handler: handlerPath,
       code: projectCode,
     });
 
-    const projectLambda = new Function(this, 'ProjectLambda', {
-      runtime: runTime,
-      handler: handlerPath + '::getProject',
-      code: projectCode
-    });
-    
     //
     // **************************************
     // Dynamo
