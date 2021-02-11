@@ -2,7 +2,7 @@ import {Construct, Stack, StackProps, SecretValue, RemovalPolicy} from 'monocdk'
 import { Artifact} from 'monocdk/aws-codepipeline';
 import { CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'monocdk/aws-codepipeline-actions';
 import { CdkPipeline, SimpleSynthAction} from 'monocdk/pipelines';
-import { Project, FilterGroup, EventAction, BuildSpec, Source, PipelineProject, LinuxBuildImage } from 'monocdk/aws-codebuild';
+import { Project, FilterGroup, EventAction, BuildSpec, Source, PipelineProject, LinuxBuildImage, GitHubSourceCredentials } from 'monocdk/aws-codebuild';
 import { BETA, PROD } from '../env/accounts';
 import { WebsiteStage } from './website-stage';
 //https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
@@ -43,6 +43,10 @@ export class WebsitePipelineStack extends Stack {
                 synthCommand: 'npx cdk synth',
                 subdirectory: 'cdk'
             })
+        });
+
+        new GitHubSourceCredentials(this, 'GithubSourceCreds', {
+            accessToken: SecretValue.secretsManager('github-token')
         });
 
         const pullRequestProject = new Project(this, 'PullRequestTests', {
