@@ -59,7 +59,10 @@ export class WebsiteStack extends Stack {
     //   zoneName: props.apiUrl
     // });
 
-    const zone = HostedZone.fromHostedZoneId(this, 'HostedZone', props.hostedZoneId);
+    const zone = HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
+      zoneName: props.apiUrl,
+      hostedZoneId: props.hostedZoneId
+    });
 
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
