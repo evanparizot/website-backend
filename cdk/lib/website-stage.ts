@@ -2,7 +2,8 @@ import { CfnOutput, Construct, Stage, StageProps } from 'monocdk';
 import { WebsiteStack } from './website-stack';
 
 export interface WebsiteStageProps extends StageProps {
-    readonly apiUrl: string
+    readonly hostedZoneId: string;
+    readonly apiUrl: string;
 }
 
 export class WebsiteStage extends Stage {

@@ -1,14 +1,16 @@
 import { CfnOutput, Construct, RemovalPolicy, Stack } from 'monocdk';
 import { Code, Function, Runtime } from 'monocdk/aws-lambda';
 import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-dynamodb';
-import { ARecord, PublicHostedZone, RecordTarget } from 'monocdk/aws-route53';
+import { ARecord, HostedZone, PublicHostedZone, RecordTarget } from 'monocdk/aws-route53';
 import { ApiGateway } from 'monocdk/aws-route53-targets';
 import { Certificate, CertificateValidation } from 'monocdk/aws-certificatemanager';
 import { EndpointType, JsonSchemaType, JsonSchemaVersion, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
 
-export interface WebsiteStackProps extends WebsiteStageProps {}
+export interface WebsiteStackProps extends WebsiteStageProps {
+  hostedZoneId: string;
+}
 
 export class WebsiteStack extends Stack {
 
@@ -53,9 +55,11 @@ export class WebsiteStack extends Stack {
     // **************************************
     // APIGateway
     
-    const zone = new PublicHostedZone(this, 'HostedZone', {
-      zoneName: props.apiUrl
-    });
+    // const zone = new PublicHostedZone(this, 'HostedZone', {
+    //   zoneName: props.apiUrl
+    // });
+
+    const zone = HostedZone.fromHostedZoneId(this, 'HostedZone', props.hostedZoneId);
 
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
