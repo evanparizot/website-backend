@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Website.Data.Interface\Website.Data.Interface.csproj" />
+    <ProjectReference Include="..\Website.Logic.Interface\Website.Logic.Interface.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -9,15 +9,19 @@ namespace WebsiteLambda
     public class Startup
     {
         public static IConfiguration Configuration { get; private set; }
+        public static IWebHostEnvironment Environment { get; private set; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.ConfigureLogicLayer();
+            services.ConfigureDataLayer(Environment);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
