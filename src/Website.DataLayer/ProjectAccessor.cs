@@ -1,11 +1,12 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Website.Data.Interface;
 using Website.Models;
+using Website.Models.Configuration;
 
 namespace Website.DataLayer
 {
@@ -13,11 +14,13 @@ namespace Website.DataLayer
     {
         private IDynamoDBContext _ddbContext;
         private IAmazonS3 _s3Client;
+        private readonly AwsResourceConfig _config;
 
-        public ProjectAccessor(IDynamoDBContext context, IAmazonS3 s3Client)
+        public ProjectAccessor(IDynamoDBContext context, IAmazonS3 s3Client, IOptions<AwsResourceConfig> options)
         {
             _ddbContext = context;
             _s3Client = s3Client;
+            _config = options.Value;
         }
 
         public async Task CreateProject(Project project)
@@ -32,7 +35,10 @@ namespace Website.DataLayer
 
         public async Task<Project> GetProject(Guid id)
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(new Project
+            {
+                Content = _config.ProjectBucketName
+            });
         }
 
         public async Task<ProjectDetails> GetProjectDetails(string id)

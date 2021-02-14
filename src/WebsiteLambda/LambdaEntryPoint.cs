@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace WebsiteLambda
 {
@@ -7,7 +8,17 @@ namespace WebsiteLambda
 
         protected override void Init(IWebHostBuilder builder)
         {
-            builder.UseStartup<Startup>();
+            builder
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    var env = context.HostingEnvironment;
+
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                    config.AddEnvironmentVariables();
+                })
+                .UseStartup<Startup>();
         }
     }
 }

@@ -91,12 +91,18 @@ export class WebsitePipelineStack extends Stack {
 
         const betaStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Beta', {
             env: BETA,
+            environment: "Beta",
             apiUrl: 'api.beta.evanparizot.com',
             hostedZoneId: 'Z07753612ZF8O3ZB9IAV3'
         }));
 
+        betaStage.addManualApprovalAction({
+            actionName: "Manual Approval to Production"
+        });
+
         const prodStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Prod', {
             env: PROD,
+            environment: "Production",
             apiUrl: 'api.evanparizot.com',
             hostedZoneId: 'Z0775933ISRJ5NXQAFEW'
         }));

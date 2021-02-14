@@ -1,10 +1,10 @@
 import { CfnOutput, Construct, RemovalPolicy, Stack } from 'monocdk';
 import { Code, Function, Runtime } from 'monocdk/aws-lambda';
 import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-dynamodb';
-import { ARecord, HostedZone, PublicHostedZone, RecordTarget } from 'monocdk/aws-route53';
+import { ARecord, HostedZone, RecordTarget } from 'monocdk/aws-route53';
 import { ApiGateway } from 'monocdk/aws-route53-targets';
 import { Certificate, CertificateValidation } from 'monocdk/aws-certificatemanager';
-import { EndpointType, JsonSchemaType, JsonSchemaVersion, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
+import { EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
 
@@ -30,6 +30,9 @@ export class WebsiteStack extends Stack {
       runtime: Runtime.DOTNET_CORE_3_1,
       handler: handlerPath,
       code: projectCode,
+      environment: {
+        ASPNETCORE_ENVIRONMENT: props.environment
+      }
     });
 
     // **************************************

@@ -3,25 +3,26 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Website.Models.Configuration;
 
 namespace WebsiteLambda
 {
     public class Startup
     {
         public static IConfiguration Configuration { get; private set; }
-        public static IWebHostEnvironment Environment { get; private set; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.ConfigureLogicLayer();
-            services.ConfigureDataLayer(Environment);
+            services.ConfigureDataLayer();
+
+            services.Configure<AwsResourceConfig>(Configuration.GetSection(AwsResourceConfig.ConfigKey));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
