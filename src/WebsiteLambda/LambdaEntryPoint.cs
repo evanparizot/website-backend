@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace WebsiteLambda
 {
@@ -17,6 +19,13 @@ namespace WebsiteLambda
                             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
                     config.AddEnvironmentVariables();
+                })
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddAWSProvider();
+                    //logging.ClearProviders();
+                    //logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    //logging.AddLambdaLogger(context.Configuration, "Logging");
                 })
                 .UseStartup<Startup>();
         }

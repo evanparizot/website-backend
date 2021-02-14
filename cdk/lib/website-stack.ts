@@ -1,5 +1,5 @@
 import { CfnOutput, Construct, RemovalPolicy, Stack } from 'monocdk';
-import { Code, Function, Runtime } from 'monocdk/aws-lambda';
+import { Code, Function, Runtime, Tracing } from 'monocdk/aws-lambda';
 import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-dynamodb';
 import { ARecord, HostedZone, RecordTarget } from 'monocdk/aws-route53';
 import { ApiGateway } from 'monocdk/aws-route53-targets';
@@ -30,6 +30,7 @@ export class WebsiteStack extends Stack {
       runtime: Runtime.DOTNET_CORE_3_1,
       handler: handlerPath,
       code: projectCode,
+      tracing: Tracing.PASS_THROUGH,
       environment: {
         ASPNETCORE_ENVIRONMENT: props.environment
       }
