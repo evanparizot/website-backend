@@ -97,7 +97,7 @@ export class WebsitePipelineStack extends Stack {
         }));
 
         betaStage.addManualApprovalAction({
-            actionName: "Manual Approval to Production"
+            actionName: "Approval"
         });
 
         const prodStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Prod', {
