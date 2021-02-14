@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace WebsiteLambda
 {
@@ -24,8 +23,8 @@ namespace WebsiteLambda
                 {
                     logging.AddAWSProvider();
                     //logging.ClearProviders();
-                    //logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    //logging.AddLambdaLogger(context.Configuration, "Logging");
+                    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    logging.AddLambdaLogger(context.Configuration, "Logging");
                 })
                 .UseStartup<Startup>();
         }
