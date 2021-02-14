@@ -96,10 +96,6 @@ export class WebsitePipelineStack extends Stack {
             hostedZoneId: 'Z07753612ZF8O3ZB9IAV3'
         }));
 
-        betaStage.addManualApprovalAction({
-            actionName: "Approval"
-        });
-
         const prodStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Prod', {
             env: PROD,
             environment: "Production",
