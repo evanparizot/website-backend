@@ -1,4 +1,4 @@
-import { CfnOutput, Construct, RemovalPolicy, Stack } from 'monocdk';
+import { CfnOutput, Construct, Duration, RemovalPolicy, Stack } from 'monocdk';
 import { Code, Function, Runtime, Tracing } from 'monocdk/aws-lambda';
 import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-dynamodb';
 import { ARecord, HostedZone, RecordTarget } from 'monocdk/aws-route53';
@@ -33,7 +33,8 @@ export class WebsiteStack extends Stack {
       tracing: Tracing.PASS_THROUGH,
       environment: {
         ASPNETCORE_ENVIRONMENT: props.environment
-      }
+      },
+      timeout: Duration.seconds(30)
     });
 
     // **************************************
