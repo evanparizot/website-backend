@@ -22,7 +22,7 @@ namespace WebsiteLambda.Controllers
         [HttpGet("{id}")]
         public async Task<Project> GetProject(Guid id)
         {
-            _logger.Log(LogLevel.Information, "Hello there");
+            _logger.LogWarning("Controller");
             return await _projectManager.GetProject(id);
         }
     }

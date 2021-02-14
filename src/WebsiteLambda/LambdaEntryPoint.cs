@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace WebsiteLambda
 {
@@ -21,11 +22,12 @@ namespace WebsiteLambda
                 })
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.AddAWSProvider();
-                    //logging.ClearProviders();
-                    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    logging.AddLambdaLogger(context.Configuration, "Logging");
+                    logging.ClearProviders();
+                    //logging.AddAWSProvider();
+                    //logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    //logging.AddLambdaLogger(context.Configuration, "Logging");
                 })
+                .UseNLog()
                 .UseStartup<Startup>();
         }
     }
