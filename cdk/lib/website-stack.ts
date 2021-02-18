@@ -55,7 +55,7 @@ export class WebsiteStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY
     });
     
-    projectsTable.grantReadWriteData(projectsLambda);
+    projectsTable.grantFullAccess(projectsLambda);
     
     // **************************************
     // APIGateway
