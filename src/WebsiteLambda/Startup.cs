@@ -48,12 +48,12 @@ namespace WebsiteLambda
             {
                 app.UseSwagger(c =>
                 {
-                    c.RouteTemplate = "/api/swagger/{documentName}/swagger.json";
+                    c.RouteTemplate = "/website/swagger/{documentName}/swagger.json";
                 });
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "V1");
-                    c.RoutePrefix = "api/swagger";
+                    c.SwaggerEndpoint("/website/swagger/v1/swagger.json", "V1");
+                    c.RoutePrefix = "website/swagger";
                 });
             }
             
