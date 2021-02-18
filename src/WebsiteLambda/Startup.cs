@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Website.Models.Configuration;
 
 namespace WebsiteLambda
@@ -21,8 +22,19 @@ namespace WebsiteLambda
             services.AddControllers();
             services.ConfigureLogicLayer();
             services.ConfigureDataLayer();
-
+            services.ConfigureAutoMapaper();
             services.Configure<AwsResourceConfig>(Configuration.GetSection(AwsResourceConfig.ConfigKey));
+
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Website API",
+                    Description = "",
+
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -31,6 +43,17 @@ namespace WebsiteLambda
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            if (!env.IsProduction())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
+                    c.RoutePrefix = "swagger";
+                });
+            }
+            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

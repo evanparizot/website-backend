@@ -1,7 +1,7 @@
 {
   "body": "{\"test\":\"body\"}",
   "resource": "",
-  "path": "/projects/2d4d9089-5c2c-42c9-a455-223c46faae8b",
+  "path": "/projects/37912b9b-599b-46f5-bcf9-279109211f26",
   "httpMethod": "GET",
   "queryStringParameters": {
     "foo": "bar"

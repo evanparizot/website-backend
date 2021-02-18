@@ -7,7 +7,7 @@ namespace Website.Logic.Interface
 {
     public interface IProjectManager
     {
-        Task CreateProject(Project project);
+        Task<Project> CreateProject(Project project);
 
         Task<Project> GetProject(Guid id);
         Task<ProjectDetails> GetProjectDetails(string id);

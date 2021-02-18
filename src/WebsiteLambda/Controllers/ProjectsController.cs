@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Website.Logic.Interface;
 using Website.Models;
+using WebsiteLambda.DTO;
 
 namespace WebsiteLambda.Controllers
 {
@@ -11,19 +14,40 @@ namespace WebsiteLambda.Controllers
     public class ProjectsController : ControllerBase
     {
         private IProjectManager _projectManager;
+        private IMapper _mapper;
         private ILogger _logger;
 
-        public ProjectsController(IProjectManager projectManager, ILogger<ProjectsController> logger)
+        public ProjectsController(IProjectManager projectManager, IMapper mapper, ILogger<ProjectsController> logger)
         {
             _projectManager = projectManager;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        [HttpGet("{id}")]
-        public async Task<Project> GetProject(Guid id)
+        public async Task<ActionResult<Project>> CreateProjectAsync(CreateProjectRequest request)
         {
-            _logger.LogWarning("Controller");
-            return await _projectManager.GetProject(id);
+
+            var projectToBeSaved = _mapper.Map<Project>(request);
+
+            var project = await _projectManager.CreateProject(projectToBeSaved);
+
+            return project;
+        }
+
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Project>> GetProjectAsync(Guid id)
+        {
+            var project = await _projectManager.GetProject(id);
+
+            if (null == project)
+            {
+                return NotFound();
+            }
+
+            return project;
         }
     }
 }

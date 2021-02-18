@@ -11,15 +11,27 @@ namespace Website.Logic
     public class ProjectManager : IProjectManager
     {
         private IProjectAccessor _projectAccessor;
+        private ILogger _logger;
 
-        public ProjectManager(IProjectAccessor projectAccessor)
+        public ProjectManager(IProjectAccessor projectAccessor, ILogger<ProjectManager> logger)
         {
             _projectAccessor = projectAccessor;
+            _logger = logger;
         }
 
-        public async Task CreateProject(Project project)
+        public async Task<Project> CreateProject(Project project)
         {
-            throw new NotImplementedException();
+            var toSave = new Project
+            {
+                Id = Guid.NewGuid(),
+                ProjectDetails = project.ProjectDetails,
+                Content = project.Content,
+            };
+
+            toSave.ProjectDetails.CreatedDate = DateTime.Now;
+            toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
+
+            return await _projectAccessor.CreateProject(toSave);
         }
 
         public async Task<Project> GetProject(Guid id)

@@ -23,9 +23,6 @@ namespace WebsiteLambda
                 .ConfigureLogging((context, logging) =>
                 {
                     logging.ClearProviders();
-                    //logging.AddAWSProvider();
-                    //logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    //logging.AddLambdaLogger(context.Configuration, "Logging");
                 })
                 .UseNLog()
                 .UseStartup<Startup>();

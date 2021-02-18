@@ -7,7 +7,7 @@ namespace Website.Data.Interface
 {
     public interface IProjectAccessor
     {
-        Task CreateProject(Project project);
+        Task<Project> CreateProject(Project project);
 
         Task<Project> GetProject(Guid id);
         Task<Project> GetProject(string id);

@@ -6,6 +6,8 @@ using Website.DataLayer;
 using Website.Logic;
 using Website.Logic.Interface;
 using Amazon.S3;
+using Website.Data.Mapper;
+using WebsiteLambda.Mapper;
 
 namespace WebsiteLambda
 {
@@ -34,6 +36,11 @@ namespace WebsiteLambda
 
                 return new AmazonS3Client();
             });
+        }
+
+        public static void ConfigureAutoMapaper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(AutoMapperProfile), typeof(DataAutoMapperProfile));
         }
     }
 }
