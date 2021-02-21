@@ -7,19 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda", "WebsiteLam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Tests", "WebsiteLambda.Tests\WebsiteLambda.Tests.csproj", "{4F7E0E5C-29D8-4823-9D6A-2301B278ECA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Data", "Website.DataLayer\Website.Data.csproj", "{1618DF7B-D47F-432F-94B6-F28B7E5CF4FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Data", "WebsiteLambda.DataLayer\WebsiteLambda.Data.csproj", "{1618DF7B-D47F-432F-94B6-F28B7E5CF4FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Data.Tests", "Website.DataLayer.Tests\Website.Data.Tests.csproj", "{86B49830-1E64-4CA0-9C13-CEADD049C11C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Data.Tests", "WebsiteLambda.DataLayer.Tests\WebsiteLambda.Data.Tests.csproj", "{86B49830-1E64-4CA0-9C13-CEADD049C11C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Logic", "Website.Logic\Website.Logic.csproj", "{E30649C6-7494-4B61-BA48-9E6423890E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Logic", "WebsiteLambda.Logic\WebsiteLambda.Logic.csproj", "{E30649C6-7494-4B61-BA48-9E6423890E98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Logic.Tests", "Website.Logic.Tests\Website.Logic.Tests.csproj", "{03A4F74D-6516-4270-9673-65655453CCD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Logic.Tests", "WebsiteLambda.Logic.Tests\WebsiteLambda.Logic.Tests.csproj", "{03A4F74D-6516-4270-9673-65655453CCD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Models", "Website.Models\Website.Models.csproj", "{712B07DD-F8DD-40E1-9B3A-10EF2AB8671A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Models", "WebsiteLambda.Models\WebsiteLambda.Models.csproj", "{712B07DD-F8DD-40E1-9B3A-10EF2AB8671A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Data.Interface", "Website.Data.Interface\Website.Data.Interface.csproj", "{10F34913-03B7-45D5-9423-12304DE61896}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Data.Interface", "WebsiteLambda.Data.Interface\WebsiteLambda.Data.Interface.csproj", "{10F34913-03B7-45D5-9423-12304DE61896}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website.Logic.Interface", "Website.Logic.Interface\Website.Logic.Interface.csproj", "{DD9520E4-D19E-4906-A53E-102B240EE5C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebsiteLambda.Logic.Interface", "WebsiteLambda.Logic.Interface\WebsiteLambda.Logic.Interface.csproj", "{DD9520E4-D19E-4906-A53E-102B240EE5C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

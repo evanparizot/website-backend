@@ -1,5 +1,5 @@
-﻿using Website.Models;
-using WebsiteLambda.DTO;
+﻿using WebsiteLambda.Models;
+using WebsiteLambda.Models.DTO;
 
 namespace WebsiteLambda.Mapper
 {
@@ -7,11 +7,11 @@ namespace WebsiteLambda.Mapper
     {
         public AutoMapperProfile()
         {
-
             CreateMap<CreateProjectRequest, ProjectDetails>();
             CreateMap<CreateProjectRequest, Project>()
                 .ForMember(d => d.ProjectDetails, opt => opt.MapFrom(s => s));
 
+            CreateMap<Project, Project>();
         }
     }
 }

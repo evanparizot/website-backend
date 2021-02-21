@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Website.Models;
+using WebsiteLambda.Models;
 
-namespace Website.Data.Interface
+namespace WebsiteLambda.Data.Interface
 {
     public interface IProjectAccessor
     {

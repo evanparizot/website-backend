@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Amazon.XRay.Recorder.Handlers.AwsSdk;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Website.Models.Configuration;
+using WebsiteLambda.Models.Configuration;
 
 namespace WebsiteLambda
 {
@@ -19,10 +20,12 @@ namespace WebsiteLambda
 
         public void ConfigureServices(IServiceCollection services)
         {
+            AWSSDKHandler.RegisterXRayForAllServices();
+            
+            services.ConfigureAutoMapaper();
             services.AddControllers();
             services.ConfigureLogicLayer();
             services.ConfigureDataLayer();
-            services.ConfigureAutoMapaper();
             services.Configure<AwsResourceConfig>(Configuration.GetSection(AwsResourceConfig.ConfigKey));
 
             services.AddSwaggerGen(s =>
@@ -32,7 +35,6 @@ namespace WebsiteLambda
                     Version = "v1",
                     Title = "Website API",
                     Description = "",
-
                 });
             });
         }
@@ -56,7 +58,8 @@ namespace WebsiteLambda
                     c.RoutePrefix = "website/swagger";
                 });
             }
-            
+
+            app.UseXRay("WebsiteLambda");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

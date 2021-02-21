@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Website.Models
+namespace WebsiteLambda.Models
 {
     public class ProjectDetails
     {

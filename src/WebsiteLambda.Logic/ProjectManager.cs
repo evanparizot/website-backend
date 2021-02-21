@@ -1,35 +1,35 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Website.Data.Interface;
-using Website.Logic.Interface;
-using Website.Models;
+using WebsiteLambda.Data.Interface;
+using WebsiteLambda.Logic.Interface;
+using WebsiteLambda.Models;
 
-namespace Website.Logic
+namespace WebsiteLambda.Logic
 {
     public class ProjectManager : IProjectManager
     {
         private IProjectAccessor _projectAccessor;
+        private IMapper _mapper;
         private ILogger _logger;
 
-        public ProjectManager(IProjectAccessor projectAccessor, ILogger<ProjectManager> logger)
+        public ProjectManager(IProjectAccessor projectAccessor, IMapper mapper, ILogger<ProjectManager> logger)
         {
             _projectAccessor = projectAccessor;
+            _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<Project> CreateProject(Project project)
         {
-            var toSave = new Project
-            {
-                Id = Guid.NewGuid(),
-                ProjectDetails = project.ProjectDetails,
-                Content = project.Content,
-            };
+            var toSave = _mapper.Map<Project>(project);
 
-            toSave.ProjectDetails.CreatedDate = DateTime.Now;
-            toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
+            toSave.Id = Guid.NewGuid();
+            toSave.ProjectDetails.CreatedDate = toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
+
+            _logger.LogInformation("Saving new project with id: {id}", toSave.Id);
 
             return await _projectAccessor.CreateProject(toSave);
         }

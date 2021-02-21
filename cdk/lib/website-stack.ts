@@ -1,5 +1,6 @@
 import { CfnOutput, Construct, Duration, RemovalPolicy, Stack } from 'monocdk';
 import { Code, Function, Runtime, Tracing } from 'monocdk/aws-lambda';
+import { BlockPublicAccess, Bucket } from 'monocdk/aws-s3';
 import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-dynamodb';
 import { ARecord, HostedZone, RecordTarget } from 'monocdk/aws-route53';
 import { ApiGateway } from 'monocdk/aws-route53-targets';
@@ -18,6 +19,15 @@ export class WebsiteStack extends Stack {
 
   constructor(scope: Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
+
+    // **************************************
+    // S3
+
+    const projectsBucket = new Bucket(this, "ProjectsBucket", {
+        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+        removalPolicy: RemovalPolicy.DESTROY,
+    });
+
     // **************************************
     // Lambda(s)
 
@@ -32,7 +42,8 @@ export class WebsiteStack extends Stack {
       code: projectCode,
       tracing: Tracing.PASS_THROUGH,
       environment: {
-        ASPNETCORE_ENVIRONMENT: props.environment
+        ASPNETCORE_ENVIRONMENT: props.environment,
+        AwsResources__ProjectsBucketName: projectsBucket.bucketName
       },
       timeout: Duration.seconds(30)
     });
@@ -55,25 +66,19 @@ export class WebsiteStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY
     });
     
-    projectsTable.grantFullAccess(projectsLambda);
-    
     // **************************************
     // APIGateway
     
-    // const zone = new PublicHostedZone(this, 'HostedZone', {
-    //   zoneName: props.apiUrl
-    // });
-
     const zone = HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
       zoneName: props.apiUrl,
       hostedZoneId: props.hostedZoneId
     });
-
+    
     const certificate = new Certificate(this, 'Certificate', {
       domainName: props.apiUrl,
       validation: CertificateValidation.fromDns(zone)
     });
-
+    
     const restApi = new RestApi(this, 'WebsiteApi', {
       restApiName: 'WebsiteApi',
       domainName: {
@@ -83,7 +88,7 @@ export class WebsiteStack extends Stack {
         securityPolicy: SecurityPolicy.TLS_1_2
       },
     });
-
+    
     restApi.root.addProxy({
       defaultIntegration: new LambdaIntegration(projectsLambda),
       anyMethod: true
@@ -96,5 +101,10 @@ export class WebsiteStack extends Stack {
     });
     
     // **************************************
+    // Permissions
+    
+    projectsBucket.grantReadWrite(projectsLambda);
+    projectsTable.grantFullAccess(projectsLambda);
+
   }
 }

@@ -1,7 +1,7 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using System;
 
-namespace Website.Data.Models
+namespace WebsiteLambda.Data.Models
 {
     [DynamoDBTable("projects")]
     public class Project
@@ -28,8 +28,8 @@ namespace Website.Data.Models
         [DynamoDBProperty("thumbnailUrl")]
         public string ThumbnailUrl { get; set; }
 
-        [DynamoDBProperty("s3ContentLocation")]
-        public string S3ContentLocation { get; set; }
+        [DynamoDBProperty("contentType")]
+        public string ContentType { get; set; }
 
         [DynamoDBProperty("createdDate")]
         public DateTime CreatedDate { get; set; }

@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Website.Logic.Tests
+namespace WebsiteLambda.Logic.Tests
 {
     public class UnitTest1
     {

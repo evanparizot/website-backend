@@ -1,13 +1,13 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.DependencyInjection;
-using Website.Data.Interface;
-using Website.DataLayer;
-using Website.Logic;
-using Website.Logic.Interface;
+using WebsiteLambda.Data.Interface;
 using Amazon.S3;
-using Website.Data.Mapper;
+using WebsiteLambda.Logic.Interface;
+using WebsiteLambda.Logic;
+using WebsiteLambda.Data;
 using WebsiteLambda.Mapper;
+using WebsiteLambda.Data.Mapper;
 
 namespace WebsiteLambda
 {

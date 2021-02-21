@@ -1,16 +1,18 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
+using Amazon.S3.Model;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Website.Data.Interface;
-using Website.Models;
-using Website.Models.Configuration;
+using WebsiteLambda.Data.Interface;
+using WebsiteLambda.Models;
+using WebsiteLambda.Models.Configuration;
 
-namespace Website.DataLayer
+namespace WebsiteLambda.Data
 {
     public class ProjectAccessor : IProjectAccessor
     {
@@ -34,38 +36,35 @@ namespace Website.DataLayer
 
         public async Task<Project> CreateProject(Project project)
         {
-            var toSave = _mapper.Map<Data.Models.Project>(project);
+            var toSave = _mapper.Map<Models.Project>(project, opt =>
+            {
+                opt.Items["Version"] = BaseVersion;
+                opt.Items["LatestVersion"] = BaseVersion;
+            });
 
-            toSave.LatestVersion = BaseVersion;
-            toSave.Version = BaseVersion;
+            var request = new PutObjectRequest
+            {
+                BucketName = _config.ProjectsBucketName,
+                Key = GetS3CompositeKey(toSave.Id, BaseVersion),
+                ContentBody = project.ContentBody
+            };
 
-            // Save content to S3 (if this fails then don't save anything to dynamo)
-            
-            // Save project with version 0; maybe can just use version 0 as the start at all times
-            // Use s3 location when saving project
+            await _s3Client.PutObjectAsync(request);
+            await _context.SaveAsync(toSave);
 
-
-            throw new NotImplementedException();
+            return project;
         }
 
         public async Task<Project> GetProject(string id)
         {
-            //var config = new DynamoDBOperationConfig
-            //{
-            //    IndexName = AlternateIdIndexName
-            //};
-
-            //var project = await _context.LoadAsync<Data.Models.Project>(id, config);
-
-            //return _mapper.Map<Project>(project);
             throw new NotImplementedException();
         }
 
         public async Task<Project> GetProject(Guid id)
         {
-            var project = await _context.LoadAsync<Data.Models.Project>(id, BaseVersion);
-
-            return _mapper.Map<Project>(project);
+            var project = await _context.LoadAsync<Models.Project>(id, BaseVersion);
+            var contentBody = await GetS3ContentBody(GetS3CompositeKey(id, project.LatestVersion));
+            return _mapper.Map<Project>(project, opts => opts.Items["ContentBody"] = contentBody);
         }
 
         public async Task<ProjectDetails> GetProjectDetails(string id)
@@ -110,13 +109,35 @@ namespace Website.DataLayer
                 throw new ArgumentException();
             }
 
-            if (Int32.TryParse(version.Split("_")[1], out int parsed))
+            if (int.TryParse(version.Split("_")[1], out int parsed))
             {
                 return "v_" + (parsed + 1);
-            } else
+            }
+            else
             {
                 throw new ArgumentException();
             }
+        }
+
+        private string GetS3CompositeKey(Guid id, string version)
+        {
+            return id.ToString() + "." + version;
+        }
+
+        private async Task<string> GetS3ContentBody(string key)
+        {
+            var contentBody = "";
+            using (GetObjectResponse response = await _s3Client.GetObjectAsync(new GetObjectRequest
+            {
+                BucketName = _config.ProjectsBucketName,
+                Key = key
+            }))
+            using (Stream responseStream = response.ResponseStream)
+            using (StreamReader reader = new StreamReader(responseStream))
+            {
+                contentBody = reader.ReadToEnd();
+            }
+            return contentBody;
         }
     }
 }

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Website.Models\Website.Models.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Models\WebsiteLambda.Models.csproj" />
   </ItemGroup>
 
 </Project>

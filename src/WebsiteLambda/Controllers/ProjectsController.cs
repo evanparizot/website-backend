@@ -4,18 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Website.Logic.Interface;
-using Website.Models;
-using WebsiteLambda.DTO;
+using WebsiteLambda.Logic.Interface;
+using WebsiteLambda.Models;
+using WebsiteLambda.Models.DTO;
 
 namespace WebsiteLambda.Controllers
 {
     [Route("[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private IProjectManager _projectManager;
-        private IMapper _mapper;
-        private ILogger _logger;
+        private readonly IProjectManager _projectManager;
+        private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
         public ProjectsController(IProjectManager projectManager, IMapper mapper, ILogger<ProjectsController> logger)
         {
@@ -24,12 +24,13 @@ namespace WebsiteLambda.Controllers
             _logger = logger;
         }
 
-        public async Task<ActionResult<Project>> CreateProjectAsync(CreateProjectRequest request)
+        [HttpPost]
+        [Consumes("application/json")]
+        public async Task<ActionResult<Project>> CreateProjectAsync([FromBody] CreateProjectRequest request)
         {
+            var toSave = _mapper.Map<Project>(request);
 
-            var projectToBeSaved = _mapper.Map<Project>(request);
-
-            var project = await _projectManager.CreateProject(projectToBeSaved);
+            var project = await _projectManager.CreateProject(toSave);
 
             return project;
         }
@@ -42,7 +43,7 @@ namespace WebsiteLambda.Controllers
         {
             var project = await _projectManager.GetProject(id);
 
-            if (null == project)
+            if (project == default(Project))
             {
                 return NotFound();
             }

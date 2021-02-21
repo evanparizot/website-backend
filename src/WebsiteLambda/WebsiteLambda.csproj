@@ -16,16 +16,19 @@
     <PackageReference Include="AWS.Logger.AspNetCore" Version="3.0.1" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.4.29" />
     <PackageReference Include="AWSSDK.S3" Version="3.5.8.5" />
+    <PackageReference Include="AWSSDK.XRay" Version="3.5.4.36" />
+    <PackageReference Include="AWSXRayRecorder.Handlers.AspNetCore" Version="2.7.1" />
+    <PackageReference Include="AWSXRayRecorder.Handlers.AwsSdk" Version="2.8.1" />
     <PackageReference Include="NLog" Version="4.7.7" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.10.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Website.Data.Interface\Website.Data.Interface.csproj" />
-    <ProjectReference Include="..\Website.DataLayer\Website.Data.csproj" />
-    <ProjectReference Include="..\Website.Logic.Interface\Website.Logic.Interface.csproj" />
-    <ProjectReference Include="..\Website.Logic\Website.Logic.csproj" />
-    <ProjectReference Include="..\Website.Models\Website.Models.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Data.Interface\WebsiteLambda.Data.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.DataLayer\WebsiteLambda.Data.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Logic.Interface\WebsiteLambda.Logic.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Logic\WebsiteLambda.Logic.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Models\WebsiteLambda.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.Development.json">

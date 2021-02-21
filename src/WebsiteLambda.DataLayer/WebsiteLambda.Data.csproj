@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Website.Data.Interface\Website.Data.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Data.Interface\WebsiteLambda.Data.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Models\WebsiteLambda.Models.csproj" />
   </ItemGroup>
 
 </Project>
