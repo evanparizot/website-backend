@@ -33,7 +33,7 @@ namespace WebsiteLambda.Tests
         {
             var input = new CreateProjectRequest
             {
-                Content = "Test"
+                ContentBody = "Test"
             };
 
             var result = await _toTest.CreateProjectAsync(input);
