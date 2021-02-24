@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebsiteLambda.Middleware;
 using WebsiteLambda.Models.Configuration;
 
 namespace WebsiteLambda
@@ -24,7 +25,7 @@ namespace WebsiteLambda
             
             services.ConfigureAutoMapaper();
             services.AddControllers();
-            services.ConfigureLogicLayer();
+            services.ConfigureBusinessLayer();
             services.ConfigureDataLayer();
             services.Configure<AwsResourceConfig>(Configuration.GetSection(AwsResourceConfig.ConfigKey));
 
@@ -62,7 +63,15 @@ namespace WebsiteLambda
             app.UseXRay("WebsiteLambda");
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            //app.UseCors(x => x
+            //    .AllowAnyMethod()
+            //);
+            //app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseEndpoints(e =>
             {
                 e.MapControllers();

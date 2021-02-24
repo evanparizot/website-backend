@@ -2,7 +2,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
-using WebsiteLambda.Logic.Interface;
+using WebsiteLambda.Business.Interface;
 using WebsiteLambda.Controllers;
 using WebsiteLambda.Mapper;
 using Xunit;

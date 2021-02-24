@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebsiteLambda.Models;
 
-namespace WebsiteLambda.Logic.Interface
+namespace WebsiteLambda.Business.Interface
 {
     public interface IProjectManager
     {

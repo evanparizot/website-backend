@@ -3,19 +3,21 @@ using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.DependencyInjection;
 using WebsiteLambda.Data.Interface;
 using Amazon.S3;
-using WebsiteLambda.Logic.Interface;
-using WebsiteLambda.Logic;
+using WebsiteLambda.Business.Interface;
+using WebsiteLambda.Business;
 using WebsiteLambda.Data;
 using WebsiteLambda.Mapper;
 using WebsiteLambda.Data.Mapper;
+using WebsiteLambda.Business.Helpers;
 
 namespace WebsiteLambda
 {
     public static class ServiceConfiguration
     {
-        public static void ConfigureLogicLayer(this IServiceCollection services)
+        public static void ConfigureBusinessLayer(this IServiceCollection services)
         {
             services.AddScoped<IProjectManager, ProjectManager>();
+            services.AddScoped<IProjectUpdateHelper, ProjectUpdateHelper>();
         }
 
         public static void ConfigureDataLayer(this IServiceCollection services)

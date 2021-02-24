@@ -1,5 +1,5 @@
 {
-  "body": "{\"title\": \"Test test\",\"description\": \"test description\",\"thumbnailUrl\": \"https:\/\/google.com\",\"content\": \"This is some sample content\"}",
+  "body": "{\"title\": \"Test test\",\"description\": \"test description\",\"thumbnailUrl\": \"https:\/\/google.com\",\"contentBody\": \"This is some sample content\"}",
   "resource": "",
   "path": "/projects",
   "httpMethod": "POST",
