@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using WebsiteLambda.Logic.Interface;
+using WebsiteLambda.Business.Interface;
 using WebsiteLambda.Models;
 using WebsiteLambda.Models.DTO;
 

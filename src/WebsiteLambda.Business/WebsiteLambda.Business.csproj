@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebsiteLambda.Data.Interface\WebsiteLambda.Data.Interface.csproj" />
-    <ProjectReference Include="..\WebsiteLambda.Logic.Interface\WebsiteLambda.Logic.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Business.Interface\WebsiteLambda.Business.Interface.csproj" />
     <ProjectReference Include="..\WebsiteLambda.Models\WebsiteLambda.Models.csproj" />
   </ItemGroup>
 

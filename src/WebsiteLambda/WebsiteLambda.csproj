@@ -26,8 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\WebsiteLambda.Data.Interface\WebsiteLambda.Data.Interface.csproj" />
     <ProjectReference Include="..\WebsiteLambda.DataLayer\WebsiteLambda.Data.csproj" />
-    <ProjectReference Include="..\WebsiteLambda.Logic.Interface\WebsiteLambda.Logic.Interface.csproj" />
-    <ProjectReference Include="..\WebsiteLambda.Logic\WebsiteLambda.Logic.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Business.Interface\WebsiteLambda.Business.Interface.csproj" />
+    <ProjectReference Include="..\WebsiteLambda.Business\WebsiteLambda.Business.csproj" />
     <ProjectReference Include="..\WebsiteLambda.Models\WebsiteLambda.Models.csproj" />
   </ItemGroup>
   <ItemGroup>

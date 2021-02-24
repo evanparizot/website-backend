@@ -41,6 +41,7 @@ export class WebsiteStack extends Stack {
       handler: handlerPath,
       code: projectCode,
       tracing: Tracing.PASS_THROUGH,
+      memorySize: 512,
       environment: {
         ASPNETCORE_ENVIRONMENT: props.environment,
         AwsResources__ProjectsBucketName: projectsBucket.bucketName

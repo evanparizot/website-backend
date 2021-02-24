@@ -4,19 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebsiteLambda.Data.Interface;
-using WebsiteLambda.Logic.Interface;
 using WebsiteLambda.Models;
+using WebsiteLambda.Business.Interface;
 
-namespace WebsiteLambda.Logic
+namespace WebsiteLambda.Business
 {
     public class ProjectManager : IProjectManager
     {
+        private IProjectUpdateHelper _projectUpdateHelper;
         private IProjectAccessor _projectAccessor;
         private IMapper _mapper;
         private ILogger _logger;
 
-        public ProjectManager(IProjectAccessor projectAccessor, IMapper mapper, ILogger<ProjectManager> logger)
+        public ProjectManager(IProjectUpdateHelper projectUpdateHelper, IProjectAccessor projectAccessor, IMapper mapper, ILogger<ProjectManager> logger)
         {
+            _projectUpdateHelper = projectUpdateHelper;
             _projectAccessor = projectAccessor;
             _mapper = mapper;
             _logger = logger;
@@ -27,7 +29,8 @@ namespace WebsiteLambda.Logic
             var toSave = _mapper.Map<Project>(project);
 
             toSave.Id = Guid.NewGuid();
-            toSave.ProjectDetails.CreatedDate = toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
+            toSave.ProjectDetails.CreatedDate = DateTime.Now;
+            toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
 
             _logger.LogInformation("Saving new project with id: {id}", toSave.Id);
 
