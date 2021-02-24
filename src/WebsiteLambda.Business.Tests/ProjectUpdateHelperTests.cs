@@ -14,22 +14,22 @@ namespace WebsiteLambda.Business.Tests
             _toTest = new ProjectUpdateHelper();
         }
 
-        [Fact]
-        public void GetUpdatedProject_UpdatesOne()
-        {
-            var older = new Project
-            {
-                AlternateId = "one"
-            };
+        //[Fact]
+        //public void GetUpdatedProject_UpdatesOne()
+        //{
+        //    var older = new Project
+        //    {
+        //        AlternateId = "one"
+        //    };
 
-            var newer = new Project
-            {
-                AlternateId = "two"
-            };
+        //    var newer = new Project
+        //    {
+        //        AlternateId = "two"
+        //    };
 
-            var result = _toTest.CompareAndGetUpdatedProject(older, newer);
+        //    var result = _toTest.CompareAndGetUpdatedProject(older, newer);
 
-            result.AlternateId.Should().Be("two");
-        }
+        //    result.AlternateId.Should().Be("two");
+        //}
     }
 }
