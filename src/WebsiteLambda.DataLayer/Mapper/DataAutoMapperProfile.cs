@@ -8,14 +8,10 @@ namespace WebsiteLambda.Data.Mapper
         {
             CreateMap<Project, Models.Project>()
                 .ForMember(d => d.LatestVersion, opt => opt.MapFrom((s, d, _, c) => c.Options.Items["LatestVersion"]))
-                .ForMember(d => d.Version, opt => opt.MapFrom((s, d, _, c) => c.Options.Items["Version"]))
-                .IncludeMembers(s => s.ProjectDetails);
-            CreateMap<ProjectDetails, Models.Project>();
+                .ForMember(d => d.Version, opt => opt.MapFrom((s, d, _, c) => c.Options.Items["Version"]));
 
-            CreateMap<Models.Project, ProjectDetails>();
             CreateMap<Models.Project, Project>()
-                .ForMember(d => d.ContentBody, opt => opt.MapFrom((s, d, _, c) => c.Options.Items["ContentBody"]))
-                .ForMember(d => d.ProjectDetails, opt => opt.MapFrom(s => s));
+                .ForMember(d => d.ContentBody, opt => opt.MapFrom((s, d, _, c) => c.Options.Items.ContainsKey("ContentBody") ? c.Options.Items["ContentBody"] : ""));
         }
     }
 }

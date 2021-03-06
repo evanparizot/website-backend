@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebsiteLambda.Business.Interface;
 using WebsiteLambda.Models;
@@ -35,7 +36,6 @@ namespace WebsiteLambda.Controllers
             return project;
         }
 
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,6 +49,14 @@ namespace WebsiteLambda.Controllers
             }
 
             return project;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        {
+            var projects = await _projectManager.GetProjects();
+
+            return Ok(projects);
         }
     }
 }

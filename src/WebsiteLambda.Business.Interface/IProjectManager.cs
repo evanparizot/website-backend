@@ -8,9 +8,9 @@ namespace WebsiteLambda.Business.Interface
     public interface IProjectManager
     {
         Task<Project> CreateProject(Project project);
-
+        
         Task<Project> GetProject(Guid id);
-        Task<ProjectDetails> GetProjectDetails(string id);
-        Task<ICollection<ProjectDetails>> GetProjectDetails();
+        Task<IEnumerable<Project>> GetProjects();
+
     }
 }

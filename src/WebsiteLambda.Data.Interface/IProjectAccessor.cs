@@ -10,15 +10,19 @@ namespace WebsiteLambda.Data.Interface
         Task<Project> CreateProject(Project project);
 
         Task<Project> GetProject(Guid id);
-        Task<Project> GetProject(string id);
-        Task<ProjectDetails> GetProjectDetails(string id);
-        Task<ICollection<ProjectDetails>> GetProjectDetails();
 
-        Task UpdateProject(Project project);
-        Task UpdateProjectDetails(Guid id, ProjectDetails details);
-        Task UpdateProjectDetails(string alternateId, ProjectDetails details);
+        /// <summary>
+        /// Returns all available projects.
+        /// </summary>
+        /// <param name="withContent">Used to indicate retrieval of project content. Default is false, with content being null.</param>
+        /// <returns></returns>
+        Task<IEnumerable<Project>> GetProjects(bool withContent = false);
 
-        Task RemoveProject(Guid id);
-        Task RemoveProject(string alternateId);
+        //Task UpdateProject(Project project);
+        //Task UpdateProjectDetails(Guid id, ProjectDetails details);
+        //Task UpdateProjectDetails(string alternateId, ProjectDetails details);
+
+        //Task RemoveProject(Guid id);
+        //Task RemoveProject(string alternateId);
     }
 }

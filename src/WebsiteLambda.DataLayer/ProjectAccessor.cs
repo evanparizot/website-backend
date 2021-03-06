@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AutoMapper;
@@ -55,53 +56,39 @@ namespace WebsiteLambda.Data
             return project;
         }
 
-        public async Task<Project> GetProject(string id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Project> GetProject(Guid id)
         {
             var project = await _context.LoadAsync<Models.Project>(id, BaseVersion);
+
+            if (project == null)
+            {
+                return default;
+            }
+
             var contentBody = await GetS3ContentBody(GetS3CompositeKey(id, project.LatestVersion));
             return _mapper.Map<Project>(project, opts => opts.Items["ContentBody"] = contentBody);
         }
 
-        public async Task<ProjectDetails> GetProjectDetails(string id)
+        ///<inheritdoc cref="IProjectAccessor"/>
+        public async Task<IEnumerable<Project>> GetProjects(bool withContent = false)
         {
-            throw new NotImplementedException();
+            var scanConditions = new List<ScanCondition>
+            {
+                new ScanCondition(nameof(Models.Project.Version), ScanOperator.Equal, BaseVersion)
+            };
+
+            var search =  _context.ScanAsync<Models.Project>(scanConditions);
+            var projects = new List<Models.Project>();
+            do
+            {
+                projects.AddRange(await search.GetNextSetAsync());
+            }
+            while (!search.IsDone);
+
+            return _mapper.Map<IEnumerable<Project>>(projects);
         }
 
-        public async Task<ICollection<ProjectDetails>> GetProjectDetails()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task RemoveProject(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task RemoveProject(string alternateId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateProject(Project project)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateProjectDetails(Guid id, ProjectDetails details)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateProjectDetails(string alternateId, ProjectDetails details)
-        {
-            throw new NotImplementedException();
-        }
-
+        #region Helper Methods
         private string IncrementVersion(string version)
         {
             if (!version.Contains(VersionPrefix))
@@ -127,17 +114,28 @@ namespace WebsiteLambda.Data
         private async Task<string> GetS3ContentBody(string key)
         {
             var contentBody = "";
-            using (GetObjectResponse response = await _s3Client.GetObjectAsync(new GetObjectRequest
+
+            try
             {
-                BucketName = _config.ProjectsBucketName,
-                Key = key
-            }))
-            using (Stream responseStream = response.ResponseStream)
-            using (StreamReader reader = new StreamReader(responseStream))
-            {
-                contentBody = reader.ReadToEnd();
+                using (GetObjectResponse response = await _s3Client.GetObjectAsync(new GetObjectRequest
+                {
+                    BucketName = _config.ProjectsBucketName,
+                    Key = key
+                }))
+                using (Stream responseStream = response.ResponseStream)
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    contentBody = reader.ReadToEnd();
+                }
             }
+            catch (AmazonS3Exception e)
+            {
+                _logger.LogError("Unable to retrieve specified S3 content", e);
+            }
+           
             return contentBody;
         }
+        #endregion
+
     }
 }

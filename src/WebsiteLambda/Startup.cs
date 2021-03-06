@@ -24,7 +24,11 @@ namespace WebsiteLambda
             AWSSDKHandler.RegisterXRayForAllServices();
             
             services.ConfigureAutoMapaper();
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.IgnoreNullValues = true;
+                });
             services.ConfigureBusinessLayer();
             services.ConfigureDataLayer();
             services.Configure<AwsResourceConfig>(Configuration.GetSection(AwsResourceConfig.ConfigKey));

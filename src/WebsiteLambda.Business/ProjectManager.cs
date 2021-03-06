@@ -29,8 +29,8 @@ namespace WebsiteLambda.Business
             var toSave = _mapper.Map<Project>(project);
 
             toSave.Id = Guid.NewGuid();
-            toSave.ProjectDetails.CreatedDate = DateTime.Now;
-            toSave.ProjectDetails.LastUpdatedDate = DateTime.Now;
+            toSave.CreatedDate = DateTime.Now;
+            toSave.LastUpdatedDate = DateTime.Now;
 
             _logger.LogInformation("Saving new project with id: {id}", toSave.Id);
 
@@ -42,14 +42,12 @@ namespace WebsiteLambda.Business
             return await _projectAccessor.GetProject(id);
         }
 
-        public Task<ProjectDetails> GetProjectDetails(string id)
+        public async Task<IEnumerable<Project>> GetProjects()
         {
-            throw new NotImplementedException();
-        }
+            var projects = await _projectAccessor.GetProjects();
 
-        public Task<ICollection<ProjectDetails>> GetProjectDetails()
-        {
-            throw new NotImplementedException();
+
+            return projects;
         }
     }
 }

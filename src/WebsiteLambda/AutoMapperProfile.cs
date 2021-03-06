@@ -7,9 +7,7 @@ namespace WebsiteLambda.Mapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<CreateProjectRequest, ProjectDetails>();
-            CreateMap<CreateProjectRequest, Project>()
-                .ForMember(d => d.ProjectDetails, opt => opt.MapFrom(s => s));
+            CreateMap<CreateProjectRequest, Project>();
 
             CreateMap<Project, Project>();
         }
