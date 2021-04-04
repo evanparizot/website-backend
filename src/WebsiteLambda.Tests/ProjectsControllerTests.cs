@@ -7,6 +7,10 @@ using WebsiteLambda.Controllers;
 using WebsiteLambda.Mapper;
 using Xunit;
 using WebsiteLambda.Models.DTO;
+using WebsiteLambda.Models;
+using FluentAssertions;
+using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebsiteLambda.Tests
 {
@@ -29,14 +33,52 @@ namespace WebsiteLambda.Tests
         }
 
         [Fact]
-        public async Task TestMapping()
+        public async Task CreateProjectAsync()
         {
-            var input = new CreateProjectRequest
+            var request = new CreateProjectRequest
             {
-                ContentBody = "Test"
+                Title = "Title"
             };
+            var responseProject = new Project
+            {
+                Id = Guid.NewGuid(),
+                AlternateId = "This is an alternate id"
+            };
+            _mockProjectManager.Setup(x => x.CreateProjectAsync(It.IsAny<Project>()).Result).Returns(responseProject);
 
-            var result = await _toTest.CreateProjectAsync(input);
+            var response = await _toTest.CreateProjectAsync(request);
+
+            response.Value.Should().Be(responseProject);
+        }
+
+        [Fact]
+        public async Task GetProjectAsync_SuccessfullyReturnsProject()
+        {
+            var expectedProject = new Project
+            {
+                Id = Guid.NewGuid()
+            };
+            _mockProjectManager.Setup(x => x.GetProjectAsync(It.IsAny<Guid>()).Result).Returns(expectedProject);
+
+            var response = await _toTest.GetProjectAsync(Guid.NewGuid());
+
+            response.Value.Should().Be(expectedProject);
+        }
+
+        [Fact]
+        public async Task GetProjectAsync_Returns404ForNullProject()
+        {
+            _mockProjectManager.Setup(x => x.GetProjectAsync(It.IsAny<Guid>())).ReturnsAsync(default(Project));
+
+            var response = await _toTest.GetProjectAsync(Guid.NewGuid());
+
+            response.Result.Should().BeOfType(typeof(NotFoundResult));
+        }
+
+        [Fact]
+        public async Task GetProjectsAsync()
+        {
+
         }
     }
 }

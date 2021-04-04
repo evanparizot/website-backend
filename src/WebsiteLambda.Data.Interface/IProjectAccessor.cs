@@ -16,7 +16,7 @@ namespace WebsiteLambda.Data.Interface
         /// </summary>
         /// <param name="withContent">Used to indicate retrieval of project content. Default is false, with content being null.</param>
         /// <returns></returns>
-        Task<IEnumerable<Project>> GetProjects(bool withContent = false);
+        Task<IEnumerable<Project>> GetProjects(int pageSize = 10, bool withContent = false);
 
         //Task UpdateProject(Project project);
         //Task UpdateProjectDetails(Guid id, ProjectDetails details);

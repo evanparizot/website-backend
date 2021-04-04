@@ -1,10 +1,12 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("WebsiteLambda.Data.Tests")]
 namespace WebsiteLambda.Data.Models
 {
     [DynamoDBTable("projects")]
-    public class Project
+    internal class Project
     {
         [DynamoDBHashKey("id")]
         public Guid Id { get; set; }

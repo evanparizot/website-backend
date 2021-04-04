@@ -23,9 +23,12 @@ namespace WebsiteLambda
         public static void ConfigureDataLayer(this IServiceCollection services)
         {
             services.AddScoped<IProjectAccessor, ProjectAccessor>();
+            services.AddScoped<IAmazonDynamoDB, AmazonDynamoDBClient>();
+
             services.AddScoped<IDynamoDBContext>(x =>
             {
-                var client = new AmazonDynamoDBClient();
+                var serviceProvider = services.BuildServiceProvider();
+                var client = serviceProvider.GetService<IAmazonDynamoDB>();
 
                 return new DynamoDBContext(client);
             });

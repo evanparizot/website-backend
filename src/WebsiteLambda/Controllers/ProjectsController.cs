@@ -31,7 +31,7 @@ namespace WebsiteLambda.Controllers
         {
             var toSave = _mapper.Map<Project>(request);
 
-            var project = await _projectManager.CreateProject(toSave);
+            var project = await _projectManager.CreateProjectAsync(toSave);
 
             return project;
         }
@@ -41,7 +41,7 @@ namespace WebsiteLambda.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> GetProjectAsync(Guid id)
         {
-            var project = await _projectManager.GetProject(id);
+            var project = await _projectManager.GetProjectAsync(id);
 
             if (project == default(Project))
             {
@@ -52,9 +52,9 @@ namespace WebsiteLambda.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsAsync()
         {
-            var projects = await _projectManager.GetProjects();
+            var projects = await _projectManager.GetProjectsAsync();
 
             return Ok(projects);
         }

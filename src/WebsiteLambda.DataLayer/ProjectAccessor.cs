@@ -1,5 +1,7 @@
-﻿using Amazon.DynamoDBv2.DataModel;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AutoMapper;
@@ -18,17 +20,19 @@ namespace WebsiteLambda.Data
     public class ProjectAccessor : IProjectAccessor
     {
         private IDynamoDBContext _context;
+        private IAmazonDynamoDB _ddbClient;
         private IAmazonS3 _s3Client;
         private IMapper _mapper;
         private ILogger _logger;
         private readonly AwsResourceConfig _config;
-        private const string AlternateIdIndexName = "alternateId";
         private const string VersionPrefix = "v_";
         private const string BaseVersion = "v_0";
+        private const string ProjectsTableName = "projects";
 
-        public ProjectAccessor(IDynamoDBContext context, IAmazonS3 s3Client, IMapper mapper, ILogger<ProjectAccessor> logger, IOptions<AwsResourceConfig> options)
+        public ProjectAccessor(IDynamoDBContext context, IAmazonDynamoDB client, IAmazonS3 s3Client, IMapper mapper, ILogger<ProjectAccessor> logger, IOptions<AwsResourceConfig> options)
         {
             _context = context;
+            _ddbClient = client;
             _s3Client = s3Client;
             _mapper = mapper;
             _logger = logger;
@@ -70,20 +74,20 @@ namespace WebsiteLambda.Data
         }
 
         ///<inheritdoc cref="IProjectAccessor"/>
-        public async Task<IEnumerable<Project>> GetProjects(bool withContent = false)
+        public async Task<IEnumerable<Project>> GetProjects(int pagesize = 10, bool withContent = false)
         {
-            var scanConditions = new List<ScanCondition>
+            var request = new ScanRequest
             {
-                new ScanCondition(nameof(Models.Project.Version), ScanOperator.Equal, BaseVersion)
+                Limit = pagesize,
+                TableName = ProjectsTableName
             };
 
-            var search =  _context.ScanAsync<Models.Project>(scanConditions);
-            var projects = new List<Models.Project>();
-            do
+            var scanResult = await _ddbClient.ScanAsync(request);
+
+            var projects = scanResult.Items.ConvertAll(x =>
             {
-                projects.AddRange(await search.GetNextSetAsync());
-            }
-            while (!search.IsDone);
+                return _context.FromDocument<Models.Project>(Document.FromAttributeMap(x));
+            });
 
             return _mapper.Map<IEnumerable<Project>>(projects);
         }

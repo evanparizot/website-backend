@@ -24,7 +24,7 @@ namespace WebsiteLambda.Business
             _logger = logger;
         }
 
-        public async Task<Project> CreateProject(Project project)
+        public async Task<Project> CreateProjectAsync(Project project)
         {
             var toSave = _mapper.Map<Project>(project);
 
@@ -37,17 +37,14 @@ namespace WebsiteLambda.Business
             return await _projectAccessor.CreateProject(toSave);
         }
 
-        public async Task<Project> GetProject(Guid id)
+        public async Task<Project> GetProjectAsync(Guid id)
         {
             return await _projectAccessor.GetProject(id);
         }
 
-        public async Task<IEnumerable<Project>> GetProjects()
+        public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
-            var projects = await _projectAccessor.GetProjects();
-
-
-            return projects;
+            return await _projectAccessor.GetProjects();
         }
     }
 }

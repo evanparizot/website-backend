@@ -7,10 +7,10 @@ namespace WebsiteLambda.Business.Interface
 {
     public interface IProjectManager
     {
-        Task<Project> CreateProject(Project project);
+        Task<Project> CreateProjectAsync(Project project);
         
-        Task<Project> GetProject(Guid id);
-        Task<IEnumerable<Project>> GetProjects();
+        Task<Project> GetProjectAsync(Guid id);
+        Task<IEnumerable<Project>> GetProjectsAsync();
 
     }
 }
