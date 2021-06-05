@@ -5,12 +5,13 @@ import { AttributeType, BillingMode, Table, TableEncryption } from 'monocdk/aws-
 import { ARecord, HostedZone, RecordTarget } from 'monocdk/aws-route53';
 import { ApiGateway } from 'monocdk/aws-route53-targets';
 import { Certificate, CertificateValidation } from 'monocdk/aws-certificatemanager';
-import { EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
+import { CorsOptions, EndpointType, LambdaIntegration, RestApi, SecurityPolicy } from 'monocdk/aws-apigateway';
 import * as path from 'path';
 import { WebsiteStageProps } from './website-stage';
 
 export interface WebsiteStackProps extends WebsiteStageProps {
   hostedZoneId: string;
+  defaultCorsPreflightOptions: CorsOptions
 }
 
 export class WebsiteStack extends Stack {
@@ -88,7 +89,16 @@ export class WebsiteStack extends Stack {
         endpointType: EndpointType.REGIONAL,
         securityPolicy: SecurityPolicy.TLS_1_2
       },
+      defaultCorsPreflightOptions: props.defaultCorsPreflightOptions
     });
+
+    restApi.addUsagePlan('UsagePlan', {
+      name: 'Simple',
+      throttle: {
+        rateLimit: 5,
+        burstLimit: 2
+      }
+    })
     
     restApi.root.addProxy({
       defaultIntegration: new LambdaIntegration(projectsLambda),

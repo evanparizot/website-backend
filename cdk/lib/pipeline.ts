@@ -5,6 +5,7 @@ import { CdkPipeline, SimpleSynthAction} from 'monocdk/pipelines';
 import { Project, FilterGroup, EventAction, BuildSpec, Source, PipelineProject, LinuxBuildImage, GitHubSourceCredentials } from 'monocdk/aws-codebuild';
 import { BETA, PROD } from '../env/accounts';
 import { WebsiteStage } from './website-stage';
+import { Cors } from 'monocdk/aws-apigateway';
 //https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
 //https://docs.aws.amazon.com/cdk/api/latest/docs/pipelines-readme.html
 
@@ -93,14 +94,22 @@ export class WebsitePipelineStack extends Stack {
             env: BETA,
             environment: "Beta",
             apiUrl: 'api.beta.evanparizot.com',
-            hostedZoneId: 'Z07753612ZF8O3ZB9IAV3'
+            hostedZoneId: 'Z07753612ZF8O3ZB9IAV3',
+            defaultCorsPreflightOptions: {
+                allowOrigins: ['https://staging.evanparizot.com', 'http://localhost:4200'],
+                allowMethods: Cors.ALL_METHODS
+            }
         }));
 
         const prodStage = pipeline.addApplicationStage(new WebsiteStage(this, 'Prod', {
             env: PROD,
             environment: "Production",
             apiUrl: 'api.evanparizot.com',
-            hostedZoneId: 'Z0775933ISRJ5NXQAFEW'
+            hostedZoneId: 'Z0775933ISRJ5NXQAFEW',
+            defaultCorsPreflightOptions: {
+                allowOrigins: ['https://evanparizot.com'],
+                allowMethods: Cors.ALL_METHODS
+            }
         }));
     }
 }
