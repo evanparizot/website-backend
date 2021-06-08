@@ -68,9 +68,13 @@ namespace WebsiteLambda
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            //app.UseCors(x => x
-            //    .AllowAnyMethod()
-            //);
+            app.UseCors(x => 
+            {
+                x.AllowAnyOrigin();
+                x.AllowAnyMethod();
+                x.AllowAnyHeader();
+            });
+
             //app.UseAuthentication();
             app.UseAuthorization();
 
