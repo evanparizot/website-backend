@@ -96,6 +96,8 @@ export class WebsitePipelineStack extends Stack {
             apiUrl: 'api.beta.evanparizot.com',
             hostedZoneId: 'Z07753612ZF8O3ZB9IAV3',
             defaultCorsPreflightOptions: {
+                allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key'],
+                allowCredentials: true,
                 allowOrigins: ['https://staging.evanparizot.com', 'http://localhost:4200'],
                 allowMethods: Cors.ALL_METHODS
             }
