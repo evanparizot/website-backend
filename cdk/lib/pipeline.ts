@@ -98,7 +98,7 @@ export class WebsitePipelineStack extends Stack {
             defaultCorsPreflightOptions: {
                 allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key'],
                 allowCredentials: true,
-                allowOrigins: ['https://staging.evanparizot.com', 'http://localhost:4200'],
+                allowOrigins: Cors.ALL_ORIGINS,
                 allowMethods: Cors.ALL_METHODS
             }
         }));
